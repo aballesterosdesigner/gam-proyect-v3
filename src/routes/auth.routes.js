@@ -45,7 +45,6 @@ router.get(
   (req, res, next) => {
     if (req.query.return) {
       req.session.token = req.user.token;
-
       req.session.oauth2return = req.query.return;
     }
     next();
