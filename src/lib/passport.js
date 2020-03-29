@@ -3,6 +3,7 @@ const LocalStrategy = require("passport-local").Strategy;
 var GoogleStrategy = require( 'passport-google-oauth').OAuth2Strategy;
 const pool = require("../database");
 const helpers = require("./helpers");
+const credentials = require('../../credentials.json');
 
 passport.use(
   "local.signin",
@@ -40,11 +41,10 @@ passport.use(
 passport.use(
   "googleLogin",
   new GoogleStrategy({
-  clientID: "330852342985-1if95d13ocatc8ruo91h4d1nf2sepbus.apps.googleusercontent.com",
-  clientSecret: "pg0T1ViSQ_99h4Pbrv7E2Cmz",
-  callbackURL:'/google/callback',
-  hostedDomain:'gam-project-5a5-clr-gyw.appspot.com'
-  
+  clientID: "330852342985-cm40e8evjpcljl21u6o3jm31pkvufgdd.apps.googleusercontent.com",
+  clientSecret: "M-IQ3VYLYkq1GIB_5_AD5NP7",
+  callbackURL:'https://gam-project-5a5-clr-gyw.appspot.com/auth/callback'
+  // callbackURL:credentials.installed.redirect_uris[0]
 },
 (token, refreshToken, profile, done) => {
   return done(null, {

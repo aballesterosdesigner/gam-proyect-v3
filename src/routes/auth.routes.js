@@ -20,7 +20,7 @@ router.get('/google/signin', (req, res) => {
   res.render('auth/signinGoogle');
 });
 
-router.get('/google/callback',
+router.get('/auth/callback',
   passport.authenticate('googleLogin', {
     successRedirect: '/profile',
     failureRedirect: '/signin',
