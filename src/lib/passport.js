@@ -42,7 +42,7 @@ passport.use(
   new GoogleStrategy({
   clientID: "330852342985-1if95d13ocatc8ruo91h4d1nf2sepbus.apps.googleusercontent.com",
   clientSecret: "pg0T1ViSQ_99h4Pbrv7E2Cmz",
-  callbackURL:'/google/callback',
+  callbackURL:'httpgam-project-5a5-clr-gyw.appspot.com/auth/google_oauth2/callback',
   
 },
 (token, refreshToken, profile, done) => {
