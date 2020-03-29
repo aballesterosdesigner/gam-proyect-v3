@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 
-const { database } = require('./keys');
+// const { database } = require('./keys');
 
 // Intializations
 const app = express();
@@ -37,7 +37,7 @@ app.use(session({
   secret: 'faztmysqlnodemysql',
   resave: false,
   saveUninitialized: false,
-  store: new MySQLStore(database)
+  // store: new MySQLStore(database)
 }));
 app.use(flash());
 app.use(passport.initialize());
