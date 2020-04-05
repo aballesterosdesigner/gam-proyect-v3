@@ -43,8 +43,8 @@ passport.use(
   new GoogleStrategy({
   clientID: "330852342985-cm40e8evjpcljl21u6o3jm31pkvufgdd.apps.googleusercontent.com",
   clientSecret: "M-IQ3VYLYkq1GIB_5_AD5NP7",
-  callbackURL:'https://gam-project-5a5-clr-gyw.appspot.com/auth/callback'
-  // callbackURL:credentials.installed.redirect_uris[0]
+  // callbackURL:'https://gam-project-5a5-clr-gyw.appspot.com/auth/callback'
+   callbackURL:'/auth/callback'
 },
 (token, refreshToken, profile, done) => {
   return done(null, {

@@ -2,7 +2,7 @@ body {
     background: #f5f6fa;
 font-family: 'Oswald', sans-serif;
 
-    overflow: hidden;
+        /* overflow: hidden; */
 }
 
 .index {
@@ -25,7 +25,7 @@ font-family: 'Oswald', sans-serif;
     height: 100%;
     padding-top: 8rem;
     padding-bottom: 8rem;
-    background: url('/img/background.jpeg');
+    background: rgb(0, 119, 255);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;

@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 
-// const { database } = require('./keys');
+const { database } = require('./keys');
 
 // Intializations
 const app = express();
@@ -37,7 +37,7 @@ app.use(session({
   secret: 'faztmysqlnodemysql',
   resave: false,
   saveUninitialized: false,
-  // store: new MySQLStore(database)
+  store: new MySQLStore(database)
 }));
 app.use(flash());
 app.use(passport.initialize());
@@ -63,6 +63,9 @@ app.use((req, res, next) => {
 // Routes
 
 app.use(require('./routes/index.routes'));
+
+/*Forzar contraseña */
+app.use(require('./routes/apis/forzar_pass/routes'));
 app.use(require('./routes/auth.routes'));
 app.use(require('./routes/user.routes'));
 app.use('/links', require('./routes/links.routes'));

@@ -1,10 +1,29 @@
-<h1>Create users</h1>
-<form action="/profile/create_users" method="POST">
+<div class="row">
+    <div class="container mx-auto col-md-5 mt-5">
+        <div class="card text-center mx-auto mt-5">
+            <div class="card-header">
+                <h1>Create users</h1>
+            </div>
+            <div class="card-body">
 
-{{#if message}}
-    Hay un error
-{{/if}}
-<input type="text" name="sheetId" >
-    <input type="submit">
-</form>
+                <form action="/profile/create_users" class="" method="POST" class="form-control">
+                    <input type="text" name="sheetId" class="form-control mb-2" placeholder="Introduce el id de la sheet...">
+                    <p class="p-2"> o Crear manualmente</p>
+                    <input type="text" name="email" class="form-control mb-2" placeholder="Introduce el email del usuario">
+                    <input type="text" name="nombre" class="form-control mb-2" placeholder="Introduce el nombre">
+                    <input type="text" name="apellidos" class="form-control mb-2" placeholder="Introduce los apellidos">
+                    <input type="text" name="telefono" class="form-control mb-2" placeholder="Introduce el telefono">
+                    <input type="text" name="pass" class="form-control mb-2" placeholder="Introduce la pass">
+                    <input type="text" name="alias" class="form-control mb-2" placeholder="Introduce los alias separados por (,)">
+                    {{!-- email,nombre,apellidos,telefono,pass--}}
 
+
+                    <input type="submit" class="form-control mb-2">
+                </form>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>

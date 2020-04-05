@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="container mx-auto col-md-5 mt-5">
+        <div class="card text-center mx-auto mt-5">
+            <div class="card-header">
+                <h1>Forzar el cambiod de contraseña</h1>
+            </div>
+            <div class="card-body">
+                <form action="/profile/change_password" class="" method="POST" class="form-control">
+                    <input type="text" name="domain" class="form-control mb-2" placeholder="Introduce el dominio" value={{domain}}>
+                    {{#if restantes}}
+                    <p>Usuarios que no han cambiado nunca aún la contraseña</p>
+                    {{#each restantes}}
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" value={{this}}>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><a href="/profile/change_password/{{this}}">forzar</a></span>
+                            <span class="input-group-text">0.00</span>
+                        </div>
+                    </div>
+
+                    {{/each}}
+                    {{/if}}
+
+                    {{#if recientes}}
+                    <p>Usuarios que llevan {{dias}} días sin cambiar la contraseña</p>
+                    {{#each recientes}}
+                     <div class="input-group mb-2">
+                        <input type="text" class="form-control" value={{this}}>
+                        <div class="input-group-append">
+                            <span class="input-group-text"><a href="/profile/change_password/{{this}}">forzar</a></span>
+                            <span class="input-group-text">0.00</span>
+                        </div>
+                    </div>
+                    {{/each}}
+                    {{/if}}
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

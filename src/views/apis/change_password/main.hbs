@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="container mx-auto col-md-5 mt-5">
+        <div class="card text-center mx-auto mt-5">
+            <div class="card-header">
+                <h1>Forzar el cambiod de contraseña</h1>
+            </div>
+            <div class="card-body">
+                <form action="/profile/change_password" class="" method="POST" class="form-control">
+                    <input type="text" name="domain" class="form-control mb-2" placeholder="Introduce el dominio">
+                    <input type="text" name="dias" class="form-control mb-2" placeholder="Introduce los dias">
+                    <select name="eleccion" class="form-control mb-2">
+                        <option value="all">Forzar a todos los usuarios de la organización</option>
+                        <option value="user">Seleccionar usuarios</option>
+                    </select>
+                    <input type="submit" class="form-control mb-2">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
