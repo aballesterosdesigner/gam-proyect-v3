@@ -25,13 +25,18 @@ router.post('/profile/change_password', async (req, res) => {
   
     const { domain, dias, eleccion} = req.body;
 
-    // var fecha, email, evento;
+
+
+    // var organizaciones =await  helpers.obtenerClientes(oauth2, google);
+    
     var id_cliente = await helpers.obtenerIdCliente(oauth2, domain, google);
     var clientes = await helpers.obtenerClientesDominio(oauth2, domain, google);
     var eventos = await helpers.obtenerEventosAuditoria(oauth2, id_cliente, google);
     var restantes = await helpers.compararRestanteArrays(oauth2, eventos, clientes);
     var recientes = await helpers.usuariosRecientesChangePass(oauth2, eventos,domain,google,dias);
-    
+
+
+
     switch (eleccion) {
       case "user":
         res.render('apis/change_password/all',{restantes:restantes,recientes:recientes,domain:domain});

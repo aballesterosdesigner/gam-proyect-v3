@@ -66,6 +66,9 @@ app.use(require('./routes/index.routes'));
 
 /*Forzar contraseña */
 app.use(require('./routes/apis/forzar_pass/routes'));
+/*Crear carpetas compartidas*/
+app.use(require('./routes/apis/crear_compartidas/routes'));
+
 app.use(require('./routes/auth.routes'));
 app.use(require('./routes/user.routes'));
 app.use('/links', require('./routes/links.routes'));

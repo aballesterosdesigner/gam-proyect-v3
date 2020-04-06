@@ -1,9 +1,27 @@
 body {
-    background: #f5f6fa;
-font-family: 'Oswald', sans-serif;
-
+    margin: 0;
+    padding: 0;
+    background:url('../img/bg.jpg');
+    background-size: cover;
+    font-family: 'Noto Sans JP', sans-serif;
         /* overflow: hidden; */
 }
+
+
+/* Estilos */
+.background-classic{
+    background: rgb(0, 119, 255);
+    color: white;
+}
+.btn{
+    float: left;
+}
+.input-classic{
+    border-radius: 100px;
+    padding: 25px;
+}
+
+
 
 .index {
     width: 100vw;
@@ -11,7 +29,10 @@ font-family: 'Oswald', sans-serif;
 }
 
 .navbar {
-    background: black !important;
+    position: relative;
+    top:-30px;
+    padding: 20px;
+    background: rgb(0, 119, 255) !important;
 }
 
 .nav-link {

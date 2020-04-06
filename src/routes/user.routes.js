@@ -24,7 +24,6 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
   const sheetId = req.body.sheetId;
   const oauth2 = helpers.obtenerAuth(req);
   const service = google.admin({ version: 'directory_v1', auth: oauth2 });
-
   switch (sheetId) {
     case "":
       var { email, nombre, apellidos, telefono, pass, alias } = req.body;
@@ -136,84 +135,8 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
 
 
 
-// Crear unidades compartidas
-router.get('/profile/create_drive_units', (req, res) => {
-  res.render('apis/create_shared_units')
-});
 
 
-router.post('/profile/create_drive_units', isLoggedIn, (req, res) => {
-  const { nombre_unidad, sheetId, email, rol } = req.body;
-  var oauth2 = helpers.obtenerAuth(req);
-  const service = google.drive({ version: 'v3', auth: oauth2 });
-  var requestId = uuid.v4();
-  var datos = { oauth2, service, nombre_unidad, sheetId, email, rol, requestId };
-
-
-
-
-
-  switch (sheetId) {
-    case "":
-      helpers.crearUnidadesCompartidas(oauth2, service, datos, req, res);
-    break;
-    default:
-
-      break;
-  }
-
-
-});
-
-
-
-// router.get('/profile/change_password', async (req, res) => {
-//   res.render('apis/change_password/main');
-
-
-// });
-router.get('/profile/change_password',(req,res)=>{
-});
-// router.post('/profile/change_password', async (req, res) => {
-
-//   const oauth2 = helpers.obtenerAuth(req);
-
-//   const { domain, dias, eleccion } = req.body;
-//   // var fecha, email, evento;
-//   var id_cliente = await helpers.obtenerIdCliente(oauth2, domain, google);
-//   var clientes = await helpers.obtenerClientesDominio(oauth2, domain, google);
-//   var eventos = await helpers.obtenerEventosAuditoria(oauth2, id_cliente, google);
-//   var restantes = await helpers.compararRestanteArrays(oauth2, eventos, clientes);
-//   var recientes = await helpers.usuariosRecientesChangePass(oauth2, eventos,domain,google,dias);
-//   // await helpers.forzarCambioPass(oauth2, clientes, req, res);
-  
-//   switch (eleccion) {
-//     case "user":
-//       res.render('apis/change_password/all',{restantes:restantes,recientes:recientes,domain:domain});
-//     break;
-//     default:
-//       await helpers.forzarCambioPass(oauth2, recientes, req, res);
-//     break;
-//   }
-// });
-
-// router.get('/profile/change_password/:email',(req,res)=>{
-//   const {email} = req.params;
-//   const oauth2 = helpers.obtenerAuth(req);
-//   const service = google.admin({ version: 'directory_v1', auth: oauth2 });
-//   service.users.update({
-//     userKey: email,
-//     resource: {
-//       changePasswordAtNextLogin: true
-//     }
-//   }).then((success) => {
-//     req.flash('success',`Se ha forzado el cambio de contraseña de ${email }`);
-//     res.redirect('/profile/change_password')
-//   }).catch((error) => {
-//     console.log(error)
-//   });
-
-// })
 
 
 

@@ -38,6 +38,17 @@ helpers.obtenerClientesDominio = async (oauth2, domain, google) => {
   return res;
 }
 
+// helpers.obtenerClientes = async (oauth2,google) =>{
+//   const service = google.reseller({version:'v1',auth:oauth2});
+//   const res = service.subscriptions.list({});
+
+  
+//   // for (const key in res.data.subscriptions) {
+//   //   console.log(res.data.subscriptions[key]);
+//   // }
+//   return res.data.kind.subscriptions;
+// }
+
 helpers.forzarCambioPass = (oauth2, clientes, req, res,encendido) => {
 
   const service = google.admin({ version: 'directory_v1', auth: oauth2 });
@@ -103,6 +114,8 @@ helpers.obtenerEventosAuditoria = async (auth, id, google) => {
 
   return datos;
 }
+
+
 
 helpers.obtenerIdCliente = async (oauth2, domain, google) => {
   // var id = await obtenerCustomerId(oauth2, domain);

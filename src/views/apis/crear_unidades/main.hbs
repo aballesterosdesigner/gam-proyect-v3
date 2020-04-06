@@ -7,8 +7,10 @@
             <div class="card-body">
 
                 <form action="/profile/create_drive_units" class="" method="POST" class="form-control">
+                    <p>Introduce el <strong>id</strong> de la hoja</p>
                     <input type="text" name="sheetId" class="form-control mb-2" placeholder="Introduce el id de la sheet...">
-                    <p class="p-2"> o Crear manualmente</p>
+                    <input type="text" name="nombre_hoja" class="form-control mb-2" placeholder="Introduce el nombre de la hoja">
+                        <h3 class="p-3">Crear manualmente</h3>
                     <input type="text" name="nombre_unidad" placeholder="Introducir el nombre de la unidad compartida" class="form-control mb-2">
                     <p>Tipo de permiso</p>
                     <select name="rol" class="form-control"> 

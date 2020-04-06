@@ -1,5 +1,4 @@
 module.exports = {
-
     database: {
         connectionLimit: 10,
         // quitar para el deploy
