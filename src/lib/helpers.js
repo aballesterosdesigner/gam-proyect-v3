@@ -42,14 +42,14 @@ helpers.obtenerClientesDominio = async (oauth2, domain, google) => {
 //   const service = google.reseller({version:'v1',auth:oauth2});
 //   const res = service.subscriptions.list({});
 
-  
+
 //   // for (const key in res.data.subscriptions) {
 //   //   console.log(res.data.subscriptions[key]);
 //   // }
 //   return res.data.kind.subscriptions;
 // }
 
-helpers.forzarCambioPass = (oauth2, clientes, req, res,encendido) => {
+helpers.forzarCambioPass = (oauth2, clientes, req, res, encendido) => {
 
   const service = google.admin({ version: 'directory_v1', auth: oauth2 });
   var success_data = "";
@@ -61,10 +61,10 @@ helpers.forzarCambioPass = (oauth2, clientes, req, res,encendido) => {
       }
     }).then((success) => {
       console.log('el usuario' + clientes[key] + 'se ha forzado');
-      req.flash('success','Se han forzadeo todos');
+      req.flash('success', 'Se han forzadeo todos');
       res.redirect('/profile/change_password')
     }).catch((err) => {
-      
+
     });
   }
 
@@ -124,7 +124,7 @@ helpers.obtenerIdCliente = async (oauth2, domain, google) => {
     maxResults: '100', /* Número máximo de resultados */
     customerNamePrefix: domain
   });
-  
+
   console.log(await clientes);
 
 
@@ -219,33 +219,64 @@ helpers.usuariosRecientesChangePass = async (oauth2, datos, domain, google, num_
     return array.indexOf(item) === index;
   });
 
-  
+
   return uniqs;
 }
 
 
-helpers.obtenerValoresSheet = (auth, google, sheetId, range) => {
+
+
+helpers.quitarVaciosArray = (array) => {
+  var res = new Array();
+  for (const key in array) {
+    if (array[key] != "") {
+      res.push(array[key]);
+    }
+  }
+  return res;
+}
+helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
   const service = google.sheets({ version: 'v4', auth });
   var data = service.spreadsheets.values.get({
     spreadsheetId: sheetId,
     range: range
   });
+
   return data;
 }
 
-helpers.crearUnidadesCompartidas = async (auth, service, datos, req, res) => {
+// helpers.crearUnidadesCompartidas = async (auth, service, datos, req, res) => {
+//   var id_unidad = "";
+//   service.teamdrives.create({
+//     resource: {
+//       name: datos.nombre_unidad
+//     },
+//     requestId: datos.requestId,
+//     fields: '*'
+//   }).then((success) => {  
+//     helpers.introducirRolesUnidadesCompartidas(auth, service, datos, success.data.id, req, res)
+//   });
+// }
+
+
+
+helpers.crearUnidadesCompartidas = async (auth,service, unidad,requestId, req, res) => {
+  console.log('creando')
   var id_unidad = "";
   service.teamdrives.create({
     resource: {
-      name: datos.nombre_unidad
+      name: unidad,
     },
-    requestId: datos.requestId,
+    requestId: requestId,
     fields: '*'
-  }).then((success) => {
+  }).then((success) => {  
 
-    helpers.introducirRolesUnidadesCompartidas(auth, service, datos, success.data.id, req, res)
+    helpers.introducirRolesUnidadesCompartidas(oauth2, service, datos, success.data.id, req, res)
+  }).catch((err)=>{
+    console.log(err);
   });
 }
+
 
 
 
@@ -256,8 +287,9 @@ helpers.introducirRolesUnidadesCompartidas = (auth, service, datos, id_file, req
     fileId: id_file,
     supportsTeamDrives: true,
     supportsAllDrive: true,
-    domain: 'demo.hispacolextech.com',
+    // domain: 'demo.hispacolextech.com',
     resource: {
+      
       type: 'user',
       emailAddress: datos.email,
       role: datos.rol,

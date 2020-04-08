@@ -56,6 +56,8 @@ app.use(cookieParser());
 app.use((req, res, next) => {
   app.locals.message = req.flash('message');
   app.locals.success = req.flash('success');
+  app.locals.users = req.flash('users');
+
   app.locals.user = req.user;
   next();
 });
@@ -68,6 +70,9 @@ app.use(require('./routes/index.routes'));
 app.use(require('./routes/apis/forzar_pass/routes'));
 /*Crear carpetas compartidas*/
 app.use(require('./routes/apis/crear_compartidas/routes'));
+/*Dobles verificaciones*/
+app.use(require('./routes/apis/dobles_verificaciones/routes'));
+
 
 app.use(require('./routes/auth.routes'));
 app.use(require('./routes/user.routes'));

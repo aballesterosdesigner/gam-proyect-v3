@@ -27,3 +27,8 @@ repetidos = (eventos, clientes)
 
 Permite obtener los usuarios restantes (los que no han cambiado la contraseña)
 compararRestanteArrays = (oauth2, eventos, clientes)
+
+
+
+Permite quitar los elementos repetidos dentro de un array
+ helpers.quitarVaciosArray(aux_unidades)
