@@ -6,27 +6,101 @@
             </div>
             <div class="card-body">
 
-                <form action="/profile/create_drive_units" class="" method="POST" class="form-control">
-                    <p>Introduce el <strong>id</strong> de la hoja</p>
-                    <input type="text" name="sheetId" class="form-control mb-2" placeholder="Introduce el id de la sheet...">
-                    <input type="text" name="nombre_hoja" class="form-control mb-2" placeholder="Introduce el nombre de la hoja">
-                        <h3 class="p-3">Crear manualmente</h3>
-                    <input type="text" name="nombre_unidad" placeholder="Introducir el nombre de la unidad compartida" class="form-control mb-2">
-                    <p>Tipo de permiso</p>
-                    <select name="rol" class="form-control"> 
-                        <option value="organizer">organizer</option>
-                        <option value="fileOrganizer">fileOrganizer</option>
-                        <option value="fileOrganizer">writer</option>
-                        <option value="commenter">commenter</option>
-                        <option value="reader">reader</option>
+                <div class="card">
+                    <form action="/profile/create_drive_units" class="" method="POST" class="form-control">
 
-                    </select>
-                    <p>Email</p>
-                    <input type="text" name="email" placeholder="Introducir el email del usuario que quieires añadir" class="form-control mb-2">
-                   
+                        <div class="card-header">
+                            <h6>Crear masivamente con sheets</h6>
+                        </div>
+                        <div class="card-body">
+                            <input type="text" name="sheetId" class="form-control mt-2 mb-2" placeholder="Introduce el id de la sheet...">
+                            <input type="text" name="nombre_hoja" class="form-control mt-2 mb-2" placeholder="Introduce el nombre de la hoja">
 
-                    <input type="submit" class="form-control mb-2">
-                </form>
+                        </div>
+                        <input type="submit" class="btn btn-block" value="Crear">
+                    </form>
+
+
+                </div>
+
+
+                <div class="card mt-5">
+                    <form action="/profile/create_drive_units/create" class="" method="POST" class="form-control">
+
+                        <div class="card-header">
+                            <h6>Crear individual</h6>
+                        </div>
+                        <div class="card-body">
+                            <input type="text" name="nombre_unidad" class="form-control mt-2 mb-2" placeholder="Introduce el nombre de la unidad">
+                        </div>
+                        <input type="submit" class="btn btn-block" value="Crear">
+                    </form>
+
+
+                </div>
+
+                <div class="card mt-5">
+                    <form action="/profile/create_drive_units/addPermissions" class="" method="POST" class="form-control">
+
+                        <div class="card-header">
+                            <h6>Añadir permisos</h6>
+                        </div>
+                        <div class="card-body">
+                            <select name="rol" class="form-control">
+                                <option value="organizer">organizer</option>
+                                <option value="fileOrganizer">fileOrganizer</option>
+                                <option value="fileOrganizer">writer</option>
+                                <option value="commenter">commenter</option>
+                                <option value="reader">reader</option>
+                            </select>
+                            <input type="email" name="email" id="" class="form-control mt-2 mb-2" placeholder="Introduce el email que quieres añadir">
+
+                            <select name="nombre_unidad" class="form-control mt-2">
+                                {{#each nombres_unidades}}
+                                <option value="{{this.[1]}}">{{this.[0]}}</option>
+                                {{/each}}
+                            </select>
+                        </div>  
+                        <input type="submit" class="btn btn-block" value="Crear">
+                    </form>
+
+
+
+                </div>
+
+
+                <div class="card mt-5">
+                    <form action="/profile/create_drive_units/borrarUnidad" class="" method="POST" class="form-control">
+
+                        <div class="card-header">
+                            <h6>Borrar unidad</h6>
+                        </div>
+                        <div class="card-body">
+                            <select name="nombre_unidad" class="form-control mt-2">
+                                {{#each nombres_unidades}}
+                                <option value="{{this.[1]}}">{{this.[0]}}</option>
+                                {{/each}}
+                            </select>
+                        </div>  
+                        <input type="submit" class="btn btn-block" value="Crear">
+                    </form>
+                </div>
+
+
+
+
+
+                {{!-- <p>Tipo de permiso</p>
+                <select name="rol" class="form-control">
+                    <option value="organizer">organizer</option>
+                    <option value="fileOrganizer">fileOrganizer</option>
+                    <option value="fileOrganizer">writer</option>
+                    <option value="commenter">commenter</option>
+                    <option value="reader">reader</option>
+                </select> --}}
+                {{!-- <p>Email</p>
+                <input type="text" name="email" placeholder="Introducir el email del usuario que quieires añadir" class="form-control mb-2">
+                <input type="submit" class="form-control mb-2"> --}}
 
             </div>
         </div>

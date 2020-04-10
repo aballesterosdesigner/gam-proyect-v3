@@ -50,7 +50,7 @@ helpers.activarDobleVerificacion = async (oauth2, email,req,res) => {
     }).catch((err)=>{
 
         console.log(err);
-    })
+    });
 }
 
 

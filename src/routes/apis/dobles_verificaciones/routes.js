@@ -26,15 +26,14 @@ router.post('/profile/dobles_verificaciones',isLoggedIn,async(req,res)=>{
     const {dominio} = req.body;
     /* Todos los datos del usuario (JSON) además contendrá los errores*/
     const data_users = await helpersUsers.dataUsers(oauth2,dominio,req,res);
-
+    console.log(data_users);
 
 
 
 
 
     /* Usuarios que no tienen la verificacion en dos pasos */
-    // const usersNotEnrolledIn2Sv = await helpersUsers.isNotEnrolledIn2Sv(oauth2,data_users,req,res);
-    
+    const usersNotEnrolledIn2Sv = await helpersUsers.isNotEnrolledIn2Sv(oauth2,data_users,req,res);
 
     req.flash('users',usersNotEnrolledIn2Sv);    
     res.redirect('/profile/dobles_verificaciones');
@@ -46,40 +45,13 @@ router.get('/profile/dobles_verificaciones/:email',async(req,res)=>{
     const {email} = req.params;
     const dominio = email.split('@')[1];
     const data_users = await helpersUsers.dataUsers(oauth2,dominio,req,res);
-
-
     const usersNotEnrolledIn2Sv = await helpersUsers.isNotEnrolledIn2Sv(oauth2,data_users,req,res);
+   
+   
     await helpersUsers.activarDobleVerificacion(oauth2,email,req,res);
-
-
     req.flash('users',usersNotEnrolledIn2Sv);
     res.redirect('/profile/dobles_verificaciones');
 });
-router.get('/profile/send',(req,res)=>{
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-               user: 'a.ballesteros@hispacolextech.com',
-               pass: 'AntonioHTC@2021'
-           }
-       });
-
-
-       const mailOptions = {
-        from: 'a.ballesteros@hispacolextech.com', // sender address
-        to: 'a.ballesteros@hispacolextech.com', // list of receivers
-        subject: 'Subject of your email', // Subject line
-        html: '<p>Your html here</p>'// plain text body
-      };
-
-
-      transporter.sendMail(mailOptions, function (err, info) {
-        if(err)
-          console.log(err)
-        else
-          console.log(info);
-     });
-})
 
 
 module.exports = router;

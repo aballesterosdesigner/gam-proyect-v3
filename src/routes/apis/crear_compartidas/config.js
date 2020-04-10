@@ -1,6 +1,6 @@
  var parametros = {
     unidad:'A2:A',
-    rol:'B2:B',
+    administradores:'B2:B',
     usuarios:'D2:D'
 }
 
