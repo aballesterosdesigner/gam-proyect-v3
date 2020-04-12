@@ -20,13 +20,7 @@ router.get('/profile/create_drive_units', async (req, res) => {
     var data = new Array();
 
 
-    for (const i in nombres_unidades) {
-        var aux = new Array();
-        aux.push(nombres_unidades[i], id_unidades[i]);
-        data.push(aux);
-
-    }
-
+    
 
     res.render('apis/crear_unidades/main', { id_unidades: id_unidades, nombres_unidades: data });
 
@@ -48,33 +42,20 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
 
     var rg_unidades = `${nombre_hoja}!${parametros.unidad}`;
     var rg_administradores = `${nombre_hoja}!${parametros.administradores}`;
+    var rg_gestores = `${nombre_hoja}!${parametros.gestores}`;
+    var rg_colaboradores = `${nombre_hoja}!${parametros.colaboradores}`;
+    var rg_comentadores = `${nombre_hoja}!${parametros.comentadores}`;
+    var rg_lectores = `${nombre_hoja}!${parametros.lectores}`;
 
     var unidades = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_unidades)).data.values;
     var values_admin = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_administradores)).data.values;
-    
+    var values_gestores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_gestores)).data.values;
+    var values_colaboradores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_colaboradores)).data.values;
+    var values_comentadores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_comentadores)).data.values;
+    var values_lectores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_lectores)).data.values;
 
 
-
-
-
-    for(const i in unidades){
-        var requestId = uuid.v4();
-        var id = helpersUnidadesCompartidas.crearUnidadesSheet(oauth2, requestId,unidades[i],'organizer',email,req, res);
-        console.log(id);
-
-    }   
-    
-    // console.log(roles);
-
-    // var usuarios = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_rol)).data.values
-    // res.send(roles);
-    // console.log(unidades);
-    // for(const key in unidades){
-    //     var requestId = uuid.v4();
-    //     helpersUnidadesCompartidas.crearUnidadesSheet(oauth2, requestId, unidades[key],roles[key],'antoniobuzouzo@gmail.com',req, res);
-    // }    
-
-
+    helpersUnidadesCompartidas.crearUnidadesSheet(oauth2,unidades,values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores,req, res);
 
 });
 
@@ -100,7 +81,6 @@ router.post('/profile/create_drive_units/borrarUnidad', (req, res) => {
 
 
 router.post('/profile/create_drive_units/addPermissions', (req, res) => {
-
     var oauth2 = helpers.obtenerAuth(req);
     const { rol, nombre_unidad, email } = req.body;
     helpersUnidadesCompartidas.addRol(oauth2, rol, nombre_unidad, email, req, res);
