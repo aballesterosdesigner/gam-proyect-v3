@@ -1,7 +1,6 @@
 module.exports = {
     database: {
-        connectionLimit: 10,
-        // quitar para el deploy
+        "connectTimeout": 20000,
         host: process.env.DATABASE_HOST || '35.192.122.221',
         user: process.env.DATABASE_USER || 'root',
         password: process.env.DATABASE_PASSWORD || 'AntonioHTC@2019',
