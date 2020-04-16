@@ -26,72 +26,101 @@ helpers.crearUnidades = (oauth2, requestId, unidad, req, res) => {
 
 helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gestores, values_colaboradores, values_comentadores, values_lectores, req, res) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });
-    var admins = new Array();
+    var admins = Array();
     var gestores = new Array();
     var colaboradores = new Array();
     var lectores = new Array();
-
+    var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
+    let ids = new Array();
     var data = new Array();
-
+    // console.log(values_admin[0]);
 
     for (const i in unidades) {
         var requestId = uuid.v4();
-
-        admins = values_admin[i][0].split(','); 
-        gestores = values_gestores[i][0].split(',');
-        colaboradores = values_colaboradores[i][0].split(',');
-        comentadores = values_comentadores[i][0].split(',');
-        lectores = values_lectores[i][0].split(',');
-
-        var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
-        data.push(admins, gestores, colaboradores, comentadores, lectores);
-
-
-
-        service.teamdrives.create({
-            resource: {
-                name: unidades[i]
-            },
-            requestId: requestId,
-            fields: '*'
-        }).then(async (result) => {
-            var type_rol = '';
-
-            // Añadimos los administradores
-            for (const j in data) {
-                switch (data[j].length) {
-                    case 0:
-
-                        break;
-
-                    default:
-                        for (const z in data[j]) {
-                            await service.permissions.create({
-                                fileId: result.data.id,
-                                supportsTeamDrives: true,
-                                resource: {
-                                    role: roles[j],
-                                    type: 'user',
-                                    emailAddress: data[j][z]
-                                }
-                            }).then((suc) => {
-                                console.log('tutto benne')
-                            }).catch((er) => {
-                                console.log(er);
-                            });
-
-                        }
-                        break;
-                }
-
-
+        // console.log(values_admin);
+        if(values_admin !=undefined){
+            for (const j in values_admin[i]) {                
+                //Introducimos cada miembro de la unidad como array ejemplo [miembrosUnidad1][MiembrosUnidad2]
+                admins[i] = values_admin[i][j].replace(/ /g, "").split(",");
+                // console.log(values_admin);
             }
+        }else{
+            admins.push('vasio');
+        }
 
-        }).finally(() => {
-            // req.flash('success', 'Se han creado todas las unidades y sus respectivos permisos');
-            // res.redirect('/profile/create_drive_units');
-        })
+
+        if(values_gestores !=undefined){
+            for (const j in values_gestores[i]) {                
+                //Introducimos cada miembro de la unidad como array ejemplo [miembrosUnidad1][MiembrosUnidad2]
+                gestores[i] = values_gestores[i][j].replace(/ /g, "").split(",");
+                // console.log(values_admin);
+            }
+        }
+      
+        
+        
+        
+        data.push(admins,gestores);
+        //En la posicion 0 de data irá admins[i] que contendrá los arrays de cada unidad
+    
+        
+
+
+
+    //     var id = service.teamdrives.create({
+    //         resource: {
+    //             name: unidades[i]
+    //         },
+    //         requestId: requestId
+    //     }).then((result) => {
+    //         return result.data.id;
+    //     }).catch((err)=>{
+    //         console.log(err);
+    //     });
+
+    //     ids.push(await id);
+    // }
+    
+    // for (const i in data) {
+    //     for (const j in data[i]) {
+    //         for (z in data[i][j]) {
+    //             // console.log(data[i][j][z]);
+    //             await service.permissions.create({
+    //                 fileId: ids[i],
+    //                 supportsTeamDrives: true,
+    //                 resource: {
+    //                     role: roles[i],
+    //                     type: 'user',
+    //                     emailAddress: data[i][j][z]
+    //                 }
+    //             }).then((result) => {
+    //                 console.log(`Se ha añadido a ${data[i][j][z]} en la unidad con id ${ids[i]} y rol ${roles[i]}`);
+    //             }).finally(()=>{
+    //                 req.flash('success','Se han insertado las unidades compartidas correctamente');
+    //                 res.redirect('/profile/create_drive_units');
+    //             })
+    //         }
+
+    //     }
+
+
     }
+
+
+    console.log(data);
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 

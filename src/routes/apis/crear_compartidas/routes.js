@@ -54,7 +54,6 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
     var values_comentadores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_comentadores)).data.values;
     var values_lectores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_lectores)).data.values;
 
-
     helpersUnidadesCompartidas.crearUnidadesSheet(oauth2,unidades,values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores,req, res);
 
 });
