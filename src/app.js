@@ -64,8 +64,10 @@ app.use((req, res, next) => {
 
 // Routes
 
-app.use(require('./routes/index.routes'));
+// app.use(require('./routes/index.routes'));
 
+/* Crear usuarios */
+app.use(require('./routes/apis/users_create/routes'));
 /*Forzar contraseña */
 app.use(require('./routes/apis/forzar_pass/routes'));
 /*Crear carpetas compartidas*/

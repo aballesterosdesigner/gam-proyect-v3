@@ -15,7 +15,7 @@ const uuid = require('uuid');
 router.get('/profile', isLoggedIn, renderUserProfile);
 
 router.get('/profile/create_users', isLoggedIn, (req, res) => {
-  res.render('apis/create_users');
+  // res.render('apis/create_users');
 });
 
 

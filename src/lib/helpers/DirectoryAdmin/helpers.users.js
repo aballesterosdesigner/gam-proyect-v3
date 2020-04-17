@@ -17,7 +17,7 @@ helpers.dataUsers = async (oauth2, dominio, req, res) => {
     }).catch((err)=>{
         console.log(err);
         return err.code;
-    });
+    })
 
     return users;
 }
@@ -53,7 +53,20 @@ helpers.activarDobleVerificacion = async (oauth2, email,req,res) => {
     });
 }
 
-
+helpers.addUsers = async(oauth2,parametros,nombre,apellidos,email,req,res)=>{
+    const service = google.admin({ version:'directory_v1', auth: oauth2 });
+    service.users.insert({
+        resource: {
+            "name": {
+              "familyName": apellidos,
+              "givenName": nombre
+            },
+            "password": pass,
+            "primaryEmail": email,
+            "changePasswordAtNextLogin": false
+          }
+    })
+}
 
 
 module.exports = helpers;
