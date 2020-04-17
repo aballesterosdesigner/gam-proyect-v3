@@ -29,6 +29,7 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
     var admins = Array();
     var gestores = new Array();
     var colaboradores = new Array();
+    var comentadores = new Array();
     var lectores = new Array();
     var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
     let ids = new Array();
@@ -38,89 +39,101 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
     for (const i in unidades) {
         var requestId = uuid.v4();
         // console.log(values_admin);
-        if(values_admin !=undefined){
-            for (const j in values_admin[i]) {                
+        if (values_admin != undefined) {
+            for (const j in values_admin[i]) {
                 //Introducimos cada miembro de la unidad como array ejemplo [miembrosUnidad1][MiembrosUnidad2]
                 admins[i] = values_admin[i][j].replace(/ /g, "").split(",");
                 // console.log(values_admin);
             }
-        }else{
+        } else {
             admins.push('vasio');
         }
 
 
-        if(values_gestores !=undefined){
-            for (const j in values_gestores[i]) {                
+        if (values_gestores != undefined) {
+            for (const j in values_gestores[i]) {
                 //Introducimos cada miembro de la unidad como array ejemplo [miembrosUnidad1][MiembrosUnidad2]
                 gestores[i] = values_gestores[i][j].replace(/ /g, "").split(",");
-                // console.log(values_admin);
             }
         }
-      
-        
-        
-        
-        data.push(admins,gestores);
+
+
+        if (values_colaboradores != undefined) {
+            for (const j in values_colaboradores[i]) {
+                //Introducimos cada miembro de la unidad como array ejemplo [miembrosUnidad1][MiembrosUnidad2]
+                colaboradores[i] = values_colaboradores[i][j].replace(/ /g, "").split(",");
+            }
+        }
+
+
+        if (values_comentadores != undefined) {
+            for (const j in values_comentadores[i]) {
+                //Introducimos cada miembro de la unidad como array ejemplo [miembrosUnidad1][MiembrosUnidad2]
+                comentadores[i] = values_comentadores[i][j].replace(/ /g, "").split(",");
+            }
+        }
+
+
+        if (values_lectores != undefined) {
+            for (const j in values_lectores[i]) {
+                //Introducimos cada miembro de la unidad como array ejemplo [miembrosUnidad1][MiembrosUnidad2]
+                lectores[i] = values_lectores[i][j].replace(/ /g, "").split(",");
+            }
+        }
+
+        data[0] = admins;
+        data[1] = gestores;
+        data[2] = colaboradores;
+        data[3] = comentadores;
+        data[4] = lectores;
+
         //En la posicion 0 de data irá admins[i] que contendrá los arrays de cada unidad
-    
-        
 
 
 
-    //     var id = service.teamdrives.create({
-    //         resource: {
-    //             name: unidades[i]
-    //         },
-    //         requestId: requestId
-    //     }).then((result) => {
-    //         return result.data.id;
-    //     }).catch((err)=>{
-    //         console.log(err);
-    //     });
-
-    //     ids.push(await id);
-    // }
-    
-    // for (const i in data) {
-    //     for (const j in data[i]) {
-    //         for (z in data[i][j]) {
-    //             // console.log(data[i][j][z]);
-    //             await service.permissions.create({
-    //                 fileId: ids[i],
-    //                 supportsTeamDrives: true,
-    //                 resource: {
-    //                     role: roles[i],
-    //                     type: 'user',
-    //                     emailAddress: data[i][j][z]
-    //                 }
-    //             }).then((result) => {
-    //                 console.log(`Se ha añadido a ${data[i][j][z]} en la unidad con id ${ids[i]} y rol ${roles[i]}`);
-    //             }).finally(()=>{
-    //                 req.flash('success','Se han insertado las unidades compartidas correctamente');
-    //                 res.redirect('/profile/create_drive_units');
-    //             })
-    //         }
-
-    //     }
 
 
+        var id = service.teamdrives.create({
+            resource: {
+                name: unidades[i]
+            },
+            requestId: requestId
+        }).then((result) => {
+            console.log(result.data.id);
+            return result.data.id;
+        }).catch((err) => {
+            console.log(err);
+        });
+
+        ids.push(await id);
     }
 
 
-    console.log(data);
 
+    for (const i in data) {
+        var rol = roles[i];
+        for (const j in data[i]) {
+            var nom_unidades = unidades[j];
+            var id = ids[j];
+            for (const k in data[i][j]) {
+                var nom_usuario = data[i][j][k];
+                await service.permissions.create({
+                    fileId: id,
+                    supportsTeamDrives: true,
+                    resource: {
+                        role: rol,
+                        type: 'user',
+                        emailAddress: nom_usuario
+                    }
+                }).then((success)=>{
+                    console.log(`Se ha insertado correctamente al usuario ${nom_usuario} en la unidad ${nom_unidades} con rol ${rol}`)
+                })
+            }
 
-
-
-
-
-
-
-
-
-
-
-
+        }
+    }
+    req.flash('success','Se han creado correctamente las unidades compartidas');
+    res.redirect('/profile/create_drive_units');
 }
 
 
