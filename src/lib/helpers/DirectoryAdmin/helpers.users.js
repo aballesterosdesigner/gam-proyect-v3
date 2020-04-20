@@ -6,6 +6,7 @@ const { OAuth2Client } = require('google-auth-library');
 const credentials = require('../../../../credentials.json');
 const helpers = {};
 
+
 /* Mostrar usuarios de un dominio */
 helpers.dataUsers = async (oauth2, dominio, req, res) => {
     const admin = google.admin({ version: 'directory_v1', auth: oauth2 });
@@ -53,19 +54,15 @@ helpers.activarDobleVerificacion = async (oauth2, email,req,res) => {
     });
 }
 
-helpers.addUsers = async(oauth2,parametros,nombre,apellidos,email,req,res)=>{
+helpers.addUsersSheet = async(oauth2,nombres,apellidos,correos,req,res)=>{
     const service = google.admin({ version:'directory_v1', auth: oauth2 });
-    service.users.insert({
-        resource: {
-            "name": {
-              "familyName": apellidos,
-              "givenName": nombre
-            },
-            "password": pass,
-            "primaryEmail": email,
-            "changePasswordAtNextLogin": false
-          }
-    })
+
+    for(const i in nombres){
+      if(nombres[i] === undefined){ 
+          
+      }
+        console.log(`El usuario con nombre ${nombres[i]} ${apellidos[i]} con email ${correos[i]}`);
+    }
 }
 
 

@@ -33,19 +33,15 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     
 
     for(const i in nombres){
-        var correo = correos[i];
+        var email = correos[i];
         var nombre = nombres[i];
-        var apellido = apellidos[i];
+        var apellidos = apellidos[i];
+        var lon = nombres.length;
     
-      await hp_users.addUsers(oauth2,parametros,nombre,apellidos,email,req,res);
-        res.send('acabó');
-    
+        await hp_users.addUsersSheet(oauth2,nombres,apellidos,correos,req,res);
     
     }
 
-
-    // console.log(correos,nombres,apellidos,alias);
-    // Nombre	Apellidos	Alias o Cuenta Secundaria
 
 
 

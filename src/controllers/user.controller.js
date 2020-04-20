@@ -6,9 +6,6 @@ const passport = require('passport');
 
 userCtrl.renderUserProfile = (req, res, next) => {
   res.render('profile');
- 
-  
-
  }
 
 module.exports = userCtrl;
