@@ -77,7 +77,7 @@ app.use(require('./routes/apis/dobles_verificaciones/routes'));
 
 
 app.use(require('./routes/auth.routes'));
-// app.use(require('./routes/user.routes'));
+app.use(require('./routes/user.routes'));
 app.use(require('./routes/index.routes'));
 
 app.use('/links', require('./routes/links.routes'));

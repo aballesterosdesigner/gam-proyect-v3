@@ -26,6 +26,8 @@
     "gmail-send": "^1.8.10",
     "google-auth-library": "^6.0.0",
     "googleapis": "^39.2.0",
+    "jquery": "^3.5.0",
+    "jsdom": "^16.2.2",
     "morgan": "^1.9.1",
     "mysql": "^2.18.1",
     "mysql-client": "^0.3.0",
@@ -38,7 +40,11 @@
     "timeago.js": "^4.0.1"
   },
   "devDependencies": {
+    "babel-loader": "^8.1.0",
+    "eslint-loader": "^4.0.0",
+    "json-loader": "^0.5.7",
     "nodemon": "^1.19.4",
-    "npm-check-updates": "^3.2.1"
+    "npm-check-updates": "^3.2.1",
+    "webpack": "^4.42.1"
   }
 }

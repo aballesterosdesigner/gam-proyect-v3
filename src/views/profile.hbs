@@ -1,13 +1,32 @@
 <div class="container p-4">
     <div class="row">
-        <div class="col-md-4 mx-auto">
+        <div class="col-md-8 mx-auto">
             <div class="card text-center">
+                <div class="card-header bg-light">
+                    <h2>Selecciona lo que quieres hacer</h2>
+                </div>
                 <div class="card-body">
-                    <h3>Welcome {{user.fullname}}</h3>
-                    <h4>{{user.username}}</h4>
-                    {{!-- <a href="/links" class="btn btn-primary m-4">
-                        Save your Links    
-                    </a> --}}
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">@</span>
+                        </div>
+                        <a href="/profile/create_users" class="form-control nav-link text-dark bg-light">Crear usuarios</a>
+                    </div>
+
+                     <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">@</span>
+                        </div>
+                        <a href="/profile/create_drive_units" class="form-control nav-link text-dark bg-light">Crear unidades compartidas</a>
+                    </div>
+
+
+                       <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">@</span>
+                        </div>
+                        <a href="/profile/dobles_verificaciones" class="form-control nav-link text-dark bg-light">Forzado de contraseña</a>
+                    </div>
                 </div>
             </div>
         </div>

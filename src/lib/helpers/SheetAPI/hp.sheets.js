@@ -17,8 +17,8 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
         spreadsheetId: sheetId,
         range: range
     });
+    return data;
 }
-
 
 
 module.exports = helpers;

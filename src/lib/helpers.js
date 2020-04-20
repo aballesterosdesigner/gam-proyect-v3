@@ -242,7 +242,6 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
     range: range
   });
 
-  
 
 
 
