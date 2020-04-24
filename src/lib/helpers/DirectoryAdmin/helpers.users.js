@@ -59,10 +59,9 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, req, 
     var aux_nombres = new Array();
 
     var aux_alias = new Array();
-
     for (const i in correos) {
-        if (alias[i] === undefined) {
-            // console.log('Indefinido')
+        if (alias === undefined) {
+            console.log('Indefinido');
         } else {
             aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
         }

@@ -38,16 +38,7 @@ helpers.obtenerClientesDominio = async (oauth2, domain, google) => {
   return res;
 }
 
-// helpers.obtenerClientes = async (oauth2,google) =>{
-//   const service = google.reseller({version:'v1',auth:oauth2});
-//   const res = service.subscriptions.list({});
 
-
-//   // for (const key in res.data.subscriptions) {
-//   //   console.log(res.data.subscriptions[key]);
-//   // }
-//   return res.data.kind.subscriptions;
-// }
 
 helpers.forzarCambioPass = (oauth2, clientes, req, res, encendido) => {
 
@@ -249,18 +240,6 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
   return data;
 }
 
-// helpers.crearUnidadesCompartidas = async (auth, service, datos, req, res) => {
-//   var id_unidad = "";
-//   service.teamdrives.create({
-//     resource: {
-//       name: datos.nombre_unidad
-//     },
-//     requestId: datos.requestId,
-//     fields: '*'
-//   }).then((success) => {  
-//     helpers.introducirRolesUnidadesCompartidas(auth, service, datos, success.data.id, req, res)
-//   });
-// }
 
 
 
@@ -331,4 +310,8 @@ helpers.obtenerAuth = (req) => {
 
   return oauth2;
 }
+
+
+
+
 module.exports = helpers;

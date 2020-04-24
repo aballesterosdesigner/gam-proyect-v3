@@ -17,8 +17,6 @@ router.get('/mine', async (req, res, next) => {
 });
 
 
-router.get('/test',(req,res)=>{
-    console.log(req.user);
-})
+
 
 module.exports = router;
