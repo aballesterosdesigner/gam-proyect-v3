@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card mx-auto text-center">
+                <div class="card-header">
+                    <div class="h3">Crear grupos</div>
+
+                </div>
+                <div class="card-body">
+                    {{#if logs}}
+                    <div class="card">
+                        <div class="card-header">
+                            Creación completada
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-success" role="alert">
+                                {{#each logs}}
+                                    {{this}}
+
+                                {{/each}}
+                            </div>
+                        </div>
+
+
+                    </div>
+                    {{/if}}
+                    <form action="/profile/create_groups" class="" method="POST" class="form-control">
+                        {{!-- <a href="https://admin.google.com/ac/users">Ver usuarios</a> --}}
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="seeSheetId"><i class="fas fa-eye" style="cursor:pointer;"></i></span>
+                            </div>
+                            <input type="text" id="sheetId" name="sheetId" class="form-control" placeholder="Introduce el id de la sheet..."
+                                required>
+
+
+                        </div>
+                        <input type="text" id="domain" name="domain" class="form-control mt-2" placeholder="Introduce el dominio"
+                            required>
+                        <input type="text" id="nameSheet" name="nameSheet" class="form-control mt-2" placeholder="Introduce el nombre de la hoja"
+                            required>
+                        <input type="submit" class="form-control mt-3">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

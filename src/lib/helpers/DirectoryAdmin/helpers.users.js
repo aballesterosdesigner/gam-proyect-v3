@@ -24,6 +24,17 @@ helpers.dataUsers = async (oauth2, dominio, req, res) => {
 }
 
 
+helpers.usersByFields = async(oauth2,domain,fields) =>{
+    const service = google.admin({version:'directory_v1',auth:oauth2});
+    const dat = await service.users.list({
+        domain:domain,
+        fields:fields
+    });
+
+    return dat.data.users;
+}
+
+
 helpers.isNotEnrolledIn2Sv = async (oauth2, data_users, req, res) => {
     var result = new Array;
     for (key in data_users.data.users) {
