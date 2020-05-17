@@ -19,7 +19,6 @@ helpers.dataUsers = async (oauth2, dominio, req, res) => {
         console.log(err);
         return err.code;
     });
-
     return users;
 }
 
@@ -68,15 +67,20 @@ helpers.activarDobleVerificacion = async (oauth2, email, req, res) => {
 helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, req, res) => {
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
     var aux_nombres = new Array();
-
+    var err_logs = new Array();
     var aux_alias = new Array();
     for (const i in correos) {
+       
         if (alias === undefined) {
-            console.log('Indefinido');
+            console.log('INDEFINIDO')
+            // err_logs.push(correos[i]);
         } else {
             aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
         }
-
+        
+        if(nombres === undefined || apellidos == undefined){
+            err_logs.push(`${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
+        }
         service.users.insert({
             resource: {
                 name: {
@@ -101,7 +105,9 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, req, 
             }
         })
     }
-    req.flash('success', 'Se han insertado correctamente');
+   
+    
+    req.flash('err_logs', 'Hola');
     res.redirect('/profile/create_users');
 
 
