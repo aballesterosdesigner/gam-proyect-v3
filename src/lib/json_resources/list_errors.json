@@ -1,0 +1,10 @@
+{
+    "errors":{
+        "create_shared_drives":{
+            "cannotShareTeamDriveWithNonGoogleAccounts":{
+                "solution":"Comprueba si el usuario está insertado correctamente, y vuelve a intentarlo"
+            }
+        }
+
+    }
+}

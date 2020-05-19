@@ -20,6 +20,12 @@ router.get('/profile/seeUsers',(req,res)=>{
 })
 router.post('/profile/seeUsers',(req,res)=>{
   res.render('partials/seeUsers');
+});
+  
+
+
+router.get('/profile/logs',(req,res)=>{
+  res.render('partials/logs');
 })
 
 

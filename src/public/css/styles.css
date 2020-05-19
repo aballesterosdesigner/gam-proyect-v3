@@ -175,3 +175,22 @@ body {
   .text-gray {
     color: rgb(32, 32, 32);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+  .error{
+     background: red;
+  }
+
+  .success{
+    background:green;
+  }

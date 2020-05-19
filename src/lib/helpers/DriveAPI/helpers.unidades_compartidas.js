@@ -5,7 +5,7 @@ const { GoogleAuth } = require('google-auth-library');
 const { OAuth2Client } = require('google-auth-library');
 const credentials = require('../../../../credentials.json');
 const uuid = require('uuid');
-
+const list_errors = require('../../json_resources/list_errors.json');
 const helpers = {};
 
 helpers.crearUnidades = (oauth2, requestId, unidad, req, res) => {
@@ -30,11 +30,13 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
     var gestores = new Array();
     var colaboradores = new Array();
     var comentadores = new Array();
+    var logs = new Array();
+
     var lectores = new Array();
     var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
     let ids = new Array();
     var data = new Array();
-    // console.log(values_admin[0]);
+    console.log(values_admin[0]);
 
     for (const i in unidades) {
         var requestId = uuid.v4();
@@ -89,17 +91,21 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
 
         //En la posicion 0 de data irá admins[i] que contendrá los arrays de cada unidad
 
-
-
-
-
         var id = service.teamdrives.create({
             resource: {
                 name: unidades[i]
             },
             requestId: requestId
         }).then((result) => {
-            console.log(result.data.id);
+            var log 
+            log = {
+                date: `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}:${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`,
+                type:'error',
+                ubicacion:'/profile/create_shared_units',
+                description:err.errors[0].reason,
+                solution:list_errors['errors']['create_shared_drives'][`${err.errors[0].reason}`]['solution'],
+                user:nom_usuario
+            }
             return result.data.id;
         }).catch((err) => {
             console.log(err);
@@ -125,23 +131,59 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
                         type: 'user',
                         emailAddress: nom_usuario
                     }
-                }).then((success)=>{
-                    console.log(`Se ha insertado correctamente al usuario ${nom_usuario} en la unidad ${nom_unidades} con rol ${rol}`)
-                })
+                }).then((success) => {
+                    var log = new Array();
+                    var d = new Date();
+                    log = {
+                        date: `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}:${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`,
+                        type: 'success',
+                        ubicacion:'',
+                        description:`Se ha insertado correctamente al usuario ${nom_usuario} en ${nom_unidades}`
+
+                    }
+                    logs.push(log);
+
+                }).catch((err) => {
+                    console.log(list_errors);
+                    var d = new Date();
+                    var log = new Array();
+                    log = {
+                        date: `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}:${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`,
+                        type:'error',
+                        ubicacion:'/profile/create_shared_units',
+                        description:err.errors[0].reason,
+                        solution:list_errors['errors']['create_shared_drives'][`${err.errors[0].reason}`]['solution'],
+                        user:nom_usuario
+                    }
+                    logs.push(log);
+                });
             }
 
         }
     }
-    req.flash('success','Se han creado correctamente las unidades compartidas');
-    res.redirect('/profile/create_drive_units');
+
+    switch (logs.length) {
+        case 0:
+            req.flash('success', 'Se han creado correctamente las unidades compartidas');
+            res.redirect('/profile/create_drive_units');
+
+        break;
+
+        default:
+        console.log(logs);
+            res.render('partials/logs', { logs: logs });
+
+        break;
+    }
+
+    
+
 }
 
 
 
 helpers.addRolesSheet = async (oauth2, arr, id, type) => {
-
     const service = google.drive({ version: 'v3', auth: oauth2 });
-
     for (const key in arr) {
         service.permissions.create({
             fileId: id,
