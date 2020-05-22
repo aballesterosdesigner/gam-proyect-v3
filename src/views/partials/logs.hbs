@@ -1,6 +1,4 @@
 <div class="container">
-  <h2>Hoverable Dark Table</h2>
-  <p>The .table-hover class adds a hover effect (grey background color) on table rows:</p>
   <table class="table table-dark table-hover">
     <thead>
       <tr>
@@ -8,17 +6,16 @@
         <th>Tipo</th>
         <th>Description</th>
         <th>Soluciones</th>
-
       </tr>
     </thead>
     <tbody>
 
       {{#each logs}}
       <tr>
-        <td><a href="#" class="badge badge-primary">{{this.date}}</a></td>
-        <td><span class="badge badge-pill badge-primary {{this.type}}">{{this.type}}</span></td>
-        <td>{{this.description}}</td>
-        <td>{{this.solution}} <b>{{this.user}}</b></td>
+        <td><strong><a href="#" class="badge badge-primary">{{this.date}}</a></strong></td>
+        <td><strong><span class="badge badge-pill badge-primary {{this.type}}">{{this.type}}</span></strong></td>
+        <td><span class="label-{{this.type}}"><strong>{{this.description}}</strong></span></td>
+        <td><strong>{{this.solution}} {{this.user}}</strong></td>
       </tr>
       {{/each}}
     </tbody>

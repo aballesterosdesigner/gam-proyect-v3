@@ -190,7 +190,21 @@ body {
   .error{
      background: red;
   }
+  .warning{
+    background:orange;
+  }
 
   .success{
     background:green;
   }
+
+
+
+.label-error{
+  background:rgb(149, 94, 5);
+  border-radius: 100px;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 3px;
+}

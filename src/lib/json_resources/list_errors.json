@@ -3,7 +3,14 @@
         "create_shared_drives":{
             "cannotShareTeamDriveWithNonGoogleAccounts":{
                 "solution":"Comprueba si el usuario está insertado correctamente, y vuelve a intentarlo"
+            },
+            "invalid":{
+                "solution":"El usuario no está bien aplicado para el permiso, comprueba las comas"
+            },
+            "transientError":{
+                "solution":"Este error sale porque no se puede borrar a un administrador"
             }
+
         }
 
     }
