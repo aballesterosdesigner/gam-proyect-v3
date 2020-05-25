@@ -11,7 +11,6 @@ const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
 
 const { database } = require('./keys');
-
 // Intializations
 const app = express();
 require('./lib/passport');
