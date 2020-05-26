@@ -1,8 +1,5 @@
-runtime: nodejs
-env: flex
-
-runtime_config:
-  document_root: public
-
+runtime: nodejs10
+# env: flex
 beta_settings:
-  cloud_sql_instances: "gam-sql-demo:us-central1:root"
+  cloud_sql_instances: "gam-sql-demo-278414:us-east1:db-gam-demo"
+y
