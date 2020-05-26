@@ -41,9 +41,8 @@ passport.use(
 passport.use(
   "googleLogin",
   new GoogleStrategy({
-  clientID: "330852342985-cm40e8evjpcljl21u6o3jm31pkvufgdd.apps.googleusercontent.com",
-  clientSecret: "M-IQ3VYLYkq1GIB_5_AD5NP7",
-  // callbackURL:'https://gam-project-5a5-clr-gyw.appspot.com/auth/callback'
+  clientID: "gam-sql-demo@appspot.gserviceaccount.com",
+  // callbackURL:'http://gam-sql-demo.uc.r.appspot.com/'
    callbackURL:'/auth/callback'
 },
 (token, refreshToken, profile, done) => {

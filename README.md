@@ -12,4 +12,4 @@
 
 ## Todo
 1. [x] Improve Links Routes
-1. [ ] Write Route Validation with Express Validator
+1. [] Write Route Validation with Express Validator
