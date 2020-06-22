@@ -9,13 +9,11 @@ const MySQLStore = require('express-mysql-session')(session);
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cookieSession = require('cookie-session');
-
 const { database } = require('./keys');
 // Intializations
 const app = express();
 require('./lib/passport');
-
-// Settings
+/*Settings */
 app.set('port', process.env.PORT || 4000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({
@@ -27,9 +25,10 @@ app.engine('.hbs', exphbs({
 }))
 app.set('view engine', '.hbs');
 
-// Middlewares
+
+/*Middlewares*/
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(session({
@@ -41,11 +40,6 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(cookieSession({
-//   name: 'session',
-//   keys: ['123']
-// }));
-
 
 
 app.use(cookieParser());

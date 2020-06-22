@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row col-md-6 col-md-offset-2 custyle">
+            <table class="table table-striped custab">
+                <thead>
+                    <tr>
+                        <th>Razon</th>
+                        <th>Code</th>
+                        <th>Type</th>
+                        <th>Url</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                {{#each logs}}
+                <tr>
+                    <th>{{Razon}}</th>
+                    <th>{{Code}}</th>
+                    <th>{{Type}}</th>
+                    <th>{{Url}}</th>
+                    <th class="text-center">Action</th>
+                </tr>
+                {{/each}}
+
+
+
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

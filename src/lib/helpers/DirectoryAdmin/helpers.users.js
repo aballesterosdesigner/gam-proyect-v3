@@ -23,11 +23,11 @@ helpers.dataUsers = async (oauth2, dominio, req, res) => {
 }
 
 
-helpers.usersByFields = async(oauth2,domain,fields) =>{
-    const service = google.admin({version:'directory_v1',auth:oauth2});
+helpers.usersByFields = async (oauth2, domain, fields) => {
+    const service = google.admin({ version: 'directory_v1', auth: oauth2 });
     const dat = await service.users.list({
-        domain:domain,
-        fields:fields
+        domain: domain,
+        fields: fields
     });
 
     return dat.data.users;
@@ -63,24 +63,45 @@ helpers.activarDobleVerificacion = async (oauth2, email, req, res) => {
         console.log(err);
     });
 }
+helpers.forzarPass = async(oauth2,users,activado,req,res)=>{
+    const service = google.admin({ version: 'directory_v1', auth: oauth2 });
+    let result;
+    service.users.update({
+        userKey:users,
+        resource:{
+          changePasswordAtNextLogin:activado
+        }
+      }).then((res)=>{
+        console.log(res);
+    }).catch((err)=>{
+        console.log(err);
+      });
 
-helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, req, res) => {
+      return "Hola"
+
+
+}
+
+
+helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telefono, req, res) => {
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
     var aux_nombres = new Array();
     var err_logs = new Array();
     var aux_alias = new Array();
     for (const i in correos) {
-       
+
         if (alias === undefined) {
             console.log('INDEFINIDO')
             // err_logs.push(correos[i]);
         } else {
             aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
         }
-        
-        if(nombres === undefined || apellidos == undefined){
+
+        if (nombres === undefined || apellidos == undefined) {
             err_logs.push(`${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
         }
+
+        console.log(telefono[i]);
         service.users.insert({
             resource: {
                 name: {
@@ -89,6 +110,12 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, req, 
                 },
                 primaryEmail: correos[i][0],
                 password: `${nombres[i]}@2020`,
+                recoveryPhone: `+34${telefono[i]}`,
+                phones: [{
+                    primary: `+34${telefono[i]}`,
+                    value: `+34${telefono[i]}`,
+                    type: 'work'
+                }]
             },
         }).then((result) => {
             for (const j in aux_alias[i]) {
@@ -105,8 +132,8 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, req, 
             }
         })
     }
-   
-    
+
+
     req.flash('err_logs', 'Hola');
     res.redirect('/profile/create_users');
 

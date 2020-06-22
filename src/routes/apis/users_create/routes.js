@@ -15,7 +15,7 @@ var parametros = require('./config');
 
 
 
-router.get('/profile/create_users',(req,res)=>{
+router.get('/profile/create_users', (req, res) => {
     res.render('apis/create_users/main');
 });
 
@@ -33,16 +33,14 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     var nombres = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.nombre)).data.values);
     var apellidos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.apellidos)).data.values);
     var alias = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.alias)).data.values);
-    
-
-
-    await hp_users.addUsersSheet(oauth2, nombres, apellidos,correos,alias, req, res);
-
+    var telefono = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.telefono)).data.values);
+    await hp_users.addUsersSheet(oauth2, nombres, apellidos, correos, alias, telefono, req, res);
 
 
 
 
-    
+
+
 
 });
 
@@ -50,7 +48,7 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
 
 
 
-  
+
 
 
 
