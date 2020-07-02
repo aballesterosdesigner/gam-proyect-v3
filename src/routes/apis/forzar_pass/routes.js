@@ -54,14 +54,14 @@ router.post('/profile/change_password/send', async (req, res) => {
   if (Array.isArray(users) === false) {
    var log = await service.users.update({ userKey: 'hola', resource: { changePasswordAtNextLogin: true } })
       .then((res) => {
-        return  hp_logs.insertLogs(res);
+        return hp_logs.insertLogs(res);
       }).catch((err) => {
         return hp_logs.insertLogs(err);
       })
 
   } else {
     for (const i in users) {
-      log = await service.users.update({ userKey:'Hola', resource: { changePasswordAtNextLogin: true } })      
+      log = await service.users.update({ userKey:'', resource: { changePasswordAtNextLogin: true } })      
       .then((res) => {
         return hp_logs.insertLogs(res);
       }).catch(async(err) => {

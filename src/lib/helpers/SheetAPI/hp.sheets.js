@@ -20,5 +20,14 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
     return data;
 }
 
+helpers.checkId = async(auth,sheetId) =>{
+    const service = google.sheets({version:'v4',auth});
+    service.spreadsheets.get({
+        spreadsheetId:sheetId
+    }).catch((err)=>{
+        console.log(err.errors["message"]);
+    })
+}
+
 
 module.exports = helpers;

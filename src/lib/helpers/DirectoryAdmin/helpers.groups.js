@@ -126,11 +126,6 @@ helpers.listGroups = async (oauth2, domain) => {
     }
     return data;
 }
-
-
-
-
-
 module.exports = helpers;
 
 

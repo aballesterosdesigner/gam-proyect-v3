@@ -1,25 +1,38 @@
 const helpers = {};
 
 
-helpers.insertLogs = async(res)=>{
-    var log = {};
+helpers.insertLogs = async(res,txt)=>{
     // Res puede ser el error o el array de éxito
     if(res.errors){
-         log = {
-            "Razon":res.errors[0]["message"],
+         var log = {
+            "Razon":`${res.errors[0]["message"]} > ${txt}`,
             "Code:":res.code,
             "type":"error",
             "Url":res.config.url
         }
+        return log;
     }else{
-        log = {
+        var log = {
            "Type":"success",
-           "Razon":"Ha salido todo bien"
+           "Razon":txt
         }
+        return log;
     }
 
-    return log;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

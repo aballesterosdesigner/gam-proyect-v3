@@ -7,6 +7,7 @@ const credentials = require('../../../../credentials.json');
 const uuid = require('uuid');
 const list_errors = require('../../json_resources/list_errors.json');
 const helpers = {};
+const hp_logs = require('../LogsAPI/helpers');
 
 helpers.crearUnidades = (oauth2, requestId, unidad, req, res) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });
@@ -101,11 +102,7 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
 
         /* Si la unidad existe no la crearemos */
         if (unidad_existe == true) {
-            var id_unidad = await helpers.obtainIdByName(oauth2, unidades[i][0]);
-            var log = helpers.createLog('warning', `Ya existe la unidad compartida ${unidades[i][0]}`, '', '');
-            logs.push(log);
-
-            
+            var id_unidad = await helpers.obtainIdByName(oauth2, unidades[i][0]);  
             const permissions = await service.permissions.list({
                 fileId: id_unidad,
                 fields: '*',
@@ -114,21 +111,22 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
             }).then((res)=>{
                 for (const key in res.data.permissions) {
                     if(res.data.permissions[key].role!="organizer"){
-                         service.permissions.delete({
+                         var log = service.permissions.delete({
                              fileId:id_unidad,
                              supportsTeamDrives:true,
                              permissionId:res.data.permissions[key].id
-                         }).then(()=>{
-                         
-                
-                         }).catch((err)=>{
-                            var log = helpers.createLog('error', `Ya ha sido eliminado o no se puede eliminar ${res.data.permissions[key].emailAddresss}`, 'sadasd', '');
-                            logs.push(log);
-                
-                         })
-                      
+                         }).then((res)=>{
+                            //Se ha eliminado al usuario
+                            return hp_logs.insertLogs(res,'Se está updateando/eliminado un usuario')
+                        }).catch((err)=>{
+                            //Ya ha sido eliminado o no se puede eliminar
+                            return hp_logs.insertLogs(err,'Ya ha sido eliminado o no se puede eliminar');
+                        })
                     }
                 }
+
+
+                
             }).finally(async()=>{
 
 
@@ -139,7 +137,7 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
                         var id = ids[j];
                         for (const k in data[i][j]) {
                             var nom_usuario = data[i][j][k];
-                            await service.permissions.create({
+                             var log = await service.permissions.create({
                                 fileId: id_unidad,
                                 supportsTeamDrives: true,
                                 sendNotificationEmail: false,
@@ -149,22 +147,18 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
                                     emailAddress: nom_usuario
                                 }
                             }).then((success) => {
-                                var fecha = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}:${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
-                                var log = helpers.createLog('success', `Se ha insertado correctamente al usuario ${nom_usuario} en ${nom_unidades}`, '', '');
-                                logs.push(log);
-
+                                //Se ha añadido correctamente al usuario
+                                return hp_logs.insertLogs(success,'Se ha insertado el usuario')                                
                             }).catch((err) => {
-                                // console.log(list_errors);
-                                var fecha = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}:${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
-                                var log = helpers.createLog(fecha, 'error', err.errors[0].reason, list_errors['errors']['create_shared_drives'][`${err.errors[0].reason}`]['solution'], nom_usuario);
-                                logs.push(log);
+                                //Ha habido un error al añadir al usuario
+                                return hp_logs.insertLogs(err,nom_usuario);
                             });
                         }
         
                     }
                 }
 
-
+                logs.push(log);
 
             });
 
@@ -174,19 +168,22 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
             
 
         } else {
-            var id = service.teamdrives.create({
+
+           var id = service.teamdrives.create({
                 resource: {
                     name: unidades[i]
                 },
                 requestId: requestId
             }).then((result) => {
-                var log = helpers.createLog('success', `Se ha creado correctamente ${unidades[i][0]}`, '', '');
-                logs.push(log);
-                return result.data.id;
+                console.log('Se ha insertado la unidad');
+                return hp_logs.insertLogs(result,'Se ha insertado la unidad')
             }).catch((err) => {
-                console.log(err);
-            });
+                //No se ha insertado la unidad
+                return hp_logs.insertLogs(err,'');
 
+            })
+
+            logs.push(await id);
             ids.push(await id);
         }
 
@@ -202,7 +199,7 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
                 var id = ids[j];
                 for (const k in data[i][j]) {
                     var nom_usuario = data[i][j][k];
-                    await service.permissions.create({
+                    var log_permissions = await service.permissions.create({
                         fileId: id,
                         supportsTeamDrives: true,
                         sendNotificationEmail: false,
@@ -212,33 +209,23 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
                             emailAddress: nom_usuario
                         }
                     }).then((success) => {
-                        var fecha = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}:${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
-                        var log = helpers.createLog('success', `Se ha insertado correctamente al usuario ${nom_usuario} en ${nom_unidades}`, '', '');
-                        logs.push(log);
-
+                        //Se ha insertado el usuario correctamente
                     }).catch((err) => {
-                        // console.log(list_errors);
-                        var fecha = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}:${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
-                        var log = helpers.createLog(fecha, 'error', err.errors[0].reason, list_errors['errors']['create_shared_drives'][`${err.errors[0].reason}`]['solution'], nom_usuario);
-                        logs.push(log);
+                        //No se ha insertado el usuario
                     });
+
+
+
                 }
 
             }
         }
+        logs.push(log_permissions);
+
     }
 
-    switch (logs.length) {
-        case 0:
-            req.flash('success', 'Se han creado correctamente las unidades compartidas');
-            res.redirect('/profile/create_drive_units');
-
-            break;
-
-        default:
-            res.render('partials/logs', { logs: logs });
-            break;
-    }
+    console.log(logs);
+    res.render('logs/main',{logs:logs});
 
 
 
@@ -330,6 +317,7 @@ helpers.obtainIdByName = async (oauth2, name) => {
     return res;
 
 }
+
 
 helpers.listPermissions = async (oauth2, fileId) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });

@@ -88,6 +88,8 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
     var aux_nombres = new Array();
     var err_logs = new Array();
     var aux_alias = new Array();
+    var logs = new Array();
+
     for (const i in correos) {
 
         if (alias === undefined) {
