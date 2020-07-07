@@ -12,15 +12,20 @@ const hp_logs = require('../LogsAPI/helpers');
 helpers.crearUnidades = async (oauth2, unidades, req, res) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });
     for(const i in unidades){
-        console.log(unidades[i]);
         var requestId = uuid.v4();
         var UnitName = unidades[i];
-        // await service.teamdrives.create({
-        //     resource: {
-        //         name:UnitName
-        //     },
-        //     requestId: requestId
-        // })
+
+        if(await helpers.unidadExiste(oauth2,UnitName) != true){
+            console.log(`Se va a crear la unidad ${UnitName}`);
+            await service.teamdrives.create({
+                resource: {
+                    name:UnitName
+                },
+                requestId: requestId
+            });
+        }else{
+            await console.log(`La unidad ${UnitName} ya existe`);
+        }
     }
 }
 
@@ -368,23 +373,41 @@ helpers.listPermissions = async (oauth2, fileId) => {
     }
     return res;
 }
-helpers.addRol = async (oauth2,email,unidades,values,req, res) => {
+helpers.addRol = async (oauth2,unidades,rol,array,req, res) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });
-    // for (const i in values) {
-    //     console.log(values[i]);
-    // }
-    // service.permissions.create({
-    //     fileId: idUnidad,
-    //     supportsTeamDrives: true,
-    //     resource: {
-    //         role: rol,
-    //         type: 'user',
-    //         emailAddress: email
-    //     }
-    // }).then((result) => {
-    //     req.flash('success', `Se insertado a ${email} con rango ${rol}`)
-    //     res.redirect('/profile/create_drive_units')
-    // })
+    for(var i in unidades){
+        
+        var IdUnit = await helpers.obtainIdByName(oauth2,unidades[i]);
+        for(var j in array[i][0]){
+             await service.permissions.create({
+                fileId:IdUnit,
+                supportsTeamDrives:true,
+                resource:{
+                    role:rol,
+                    type:'user',
+                    emailAddress:array[i][0][j]
+                }
+
+            }).then((success)=>{
+                console.log(`Se ha insertado el usuario ${array[i][0][j]} en la unidad ${unidades[i]}`);   
+            }).catch((err)=>{
+                console.log(`Ha habido un error ${err} para ${array[i][0][j]}`);
+            });
+        }
+       /* await service.permissions.create({
+            fileId:IdUnit,
+            supportsTeamDrives:true,
+            resource:{
+                role:rol,
+                type:'user',
+                emailAddress:array[i]
+            }
+
+        }).then((success)=>{
+            console.log(`Se ha insertado el usuario ${success.data.displayName}`);   
+        });*/
+    }
+    
 }
 
 

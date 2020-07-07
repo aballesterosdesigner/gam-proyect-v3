@@ -84,20 +84,32 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
 
      
     for(var i in unidades){
-        admins.push(helpersUnidadesCompartidas.splitArray(values[0][i]));
-        // gestores.push(helpersUnidadesCompartidas.splitArray(values[1][i]));
-        // colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2][i]));
-        // comentadores.push(helpersUnidadesCompartidas.splitArray(values_comentadores[3][i]));
-        // lectores.push(helpersUnidadesCompartidas.splitArray(values_lectores[4][i]));
+        await admins.push(helpersUnidadesCompartidas.splitArray(values[0][i]));
+        //await gestores.push(helpersUnidadesCompartidas.splitArray(values[1][i]));
+        //await colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2][i]));
+        //await comentadores.push(helpersUnidadesCompartidas.splitArray(values[3][i]));
+        //await lectores.push(helpersUnidadesCompartidas.splitArray(values[4][i]));
+
+        
     }
 
 
         // helpersUnidadesCompartidas.crearUnidadesSheet(oauth2,unidades,values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores,req, res); 
-        //helpersUnidadesCompartidas.crearUnidades(oauth2, unidades, req, res);
-      console.log(  helpersUnidadesCompartidas.addRol(oauth2, rol,unidades,values,req, res));
-        
+        //var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
+
+        await helpersUnidadesCompartidas.crearUnidades(oauth2,unidades,req,res);
+        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res);
+        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'fileOrganizer',gestores,req,res);
+        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'writer',colaboradores,req,res);
+        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'commenter',comentadores,req,res);
+        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'reader',lectores,req,res);
+
+
+        res.send('Apago de mala manera');
 
     }
+
+
 
 
 
