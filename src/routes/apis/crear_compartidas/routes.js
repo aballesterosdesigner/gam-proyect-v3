@@ -49,6 +49,7 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
     var id_vacio, nombre_hoja_vacio = false;
 
 
+
     if (sheetId === "") {
         id_vacio = true;
     }
@@ -70,7 +71,32 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
         var values_colaboradores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_colaboradores)).data.values;
         var values_comentadores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_comentadores)).data.values;
         var values_lectores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_lectores)).data.values;
-        helpersUnidadesCompartidas.crearUnidadesSheet(oauth2,unidades,values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores,req, res); 
+
+        var admins = new Array();
+        var gestores = new Array();
+        var colaboradores = new Array();
+        var comentadores = new Array();
+        var lectores = new Array();
+
+
+        var values = [values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores];
+       
+
+     
+    for(var i in unidades){
+        admins.push(helpersUnidadesCompartidas.splitArray(values[0][i]));
+        // gestores.push(helpersUnidadesCompartidas.splitArray(values[1][i]));
+        // colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2][i]));
+        // comentadores.push(helpersUnidadesCompartidas.splitArray(values_comentadores[3][i]));
+        // lectores.push(helpersUnidadesCompartidas.splitArray(values_lectores[4][i]));
+    }
+
+
+        // helpersUnidadesCompartidas.crearUnidadesSheet(oauth2,unidades,values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores,req, res); 
+        //helpersUnidadesCompartidas.crearUnidades(oauth2, unidades, req, res);
+      console.log(  helpersUnidadesCompartidas.addRol(oauth2, rol,unidades,values,req, res));
+        
+
     }
 
 
@@ -84,9 +110,8 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
 router.post('/profile/create_drive_units/create', (req, res) => {
     var oauth2 = helpers.obtenerAuth(req);
     const { nombre_unidad } = req.body;
-    var requestId = uuid.v4();
-    /* Usamos la funcion para crear la unidad compartida */
-    helpersUnidadesCompartidas.crearUnidades(oauth2, requestId, nombre_unidad, req, res);
+
+    helpersUnidadesCompartidas.crearUnidades(oauth2, nombre_unidad, req, res);
 
 });
 

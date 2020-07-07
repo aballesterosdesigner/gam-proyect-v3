@@ -9,23 +9,31 @@ const list_errors = require('../../json_resources/list_errors.json');
 const helpers = {};
 const hp_logs = require('../LogsAPI/helpers');
 
-helpers.crearUnidades = (oauth2, requestId, unidad, req, res) => {
+helpers.crearUnidades = async (oauth2, unidades, req, res) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });
-    service.teamdrives.create({
-        resource: {
-            name: unidad,
-        },
-        requestId: requestId,
-        fields: '*'
-    }).then((success) => {
-        req.flash('success', `Se ha creado la unidad correctamente ${unidad}`);
-        res.redirect('/profile/create_drive_units');
-    }).catch((err) => {
-        console.log(err);
-    });
+    for(const i in unidades){
+        console.log(unidades[i]);
+        var requestId = uuid.v4();
+        var UnitName = unidades[i];
+        // await service.teamdrives.create({
+        //     resource: {
+        //         name:UnitName
+        //     },
+        //     requestId: requestId
+        // })
+    }
 }
 
+
+
 helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gestores, values_colaboradores, values_comentadores, values_lectores, req, res) => {
+    const fs = require('fs');
+
+   
+
+
+
+      
     const service = google.drive({ version: 'v3', auth: oauth2 });
     var admins = Array();
     var gestores = new Array();
@@ -37,6 +45,7 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
     var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
     let ids = new Array();
     var data = new Array();
+    var fecha = `${d.getDay()}/${d.getMonth()}/${d.getUTCFullYear()}-${d.getUTCHours()}:${d.getUTCMinutes()}:${d.getUTCSeconds()}:${d.getMilliseconds()}`;
 
     for (const i in unidades) {
         var requestId = uuid.v4();
@@ -102,34 +111,96 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
 
         /* Si la unidad existe no la crearemos */
         if (unidad_existe == true) {
-            var id_unidad = await helpers.obtainIdByName(oauth2, unidades[i][0]);  
+            var id_unidad = await helpers.obtainIdByName(oauth2, unidades[i][0]);
             const permissions = await service.permissions.list({
                 fileId: id_unidad,
-                fields: '*',
+                fields: 'permissions(id,emailAddress)',
                 supportsTeamDrives: true,
-            
-            }).then((res)=>{
+
+            }).then(async(res) => {
                 for (const key in res.data.permissions) {
-                    if(res.data.permissions[key].role!="organizer"){
-                         var log = service.permissions.delete({
-                             fileId:id_unidad,
-                             supportsTeamDrives:true,
-                             permissionId:res.data.permissions[key].id
-                         }).then((res)=>{
-                            //Se ha eliminado al usuario
-                            return hp_logs.insertLogs(res,'Se está updateando/eliminado un usuario')
-                        }).catch((err)=>{
-                            //Ya ha sido eliminado o no se puede eliminar
-                            return hp_logs.insertLogs(err,'Ya ha sido eliminado o no se puede eliminar');
+                    if (res.data.permissions[key].emailAddress != 'a.ballesteros@demo.hispacolextech.com') {
+                        var log = await service.permissions.delete({
+                            fileId: id_unidad,
+                            supportsTeamDrives: true,
+                            permissionId: res.data.permissions[key].id
+                        }).then(async(res) => {
+
+                        }).catch(async(err) => {
+                            console.log(err);
                         })
                     }
                 }
 
 
+
+            }).finally(async() => {
+                var on = true;
+                if(on!=false){
+                    for (const i in data) {
+                        var rol = roles[i];
+                        
+
+                        for (const j in data[i]) {
+                            
+                            
+                            var nom_unidades = unidades[j];
+                            var id = ids[j];
+                            for (const k in data[i][j]) {
+                                var nom_usuario = data[i][j][k];
+                                var log = await service.permissions.create({
+                                    fileId: id_unidad,
+                                    supportsTeamDrives: true,
+                                    sendNotificationEmail: false,
+                                    resource: {
+                                        role: rol,
+                                        type: 'user',
+                                        emailAddress: nom_usuario
+                                    }
+                                }).then((success) => {
+                                    fs.appendFile('logs.txt', `[SUCCESS] ${fecha}: Se está volviendo a insertar el usuario ${nom_usuario} con rol ${rol} en la unidad ${nom_unidades}\n`, function (err) {
+                                        if (err) throw err;
+                                        console.log('File is created successfully.');
+                                      }); 
+                                }).catch((err) => {
+                                    if(err.errors[0]["reason"] === "cannotShareTeamDriveWithNonGoogleAccounts"){
+                                        fs.appendFile('logs.txt', `[ERROR] ${fecha}: Usuario no añadido: El usuario ${nom_usuario} en la unidad ${nom_unidades} no existe con rol ${rol}\n`, function (err) {
+                                            if (err) throw err;
+                                            console.log('File is created successfully.');
+                                          }); 
+                                    }
+                                });
+                            }
+    
+                        }
+                    }
+                }
                 
-            }).finally(async()=>{
 
 
+            }).catch((err)=>{
+                console.log(err);   
+            });
+
+
+
+
+
+
+        } else {
+
+            var id = await service.teamdrives.create({
+                resource: {
+                    name: unidades[i]
+                },
+                requestId: requestId
+            }).then(async (result) => {
+                fs.appendFile('logs.txt', `[SUCCESS] ${fecha}: Se ha creado la unidad ${unidades[i]}\n`, function (err) {
+                    if (err) throw err;
+                    console.log('File is created successfully.');
+                  }); 
+                   
+                console.log(`Se ha insertado la unidad ${unidades[i]}`);
                 for (const i in data) {
                     var rol = roles[i];
                     for (const j in data[i]) {
@@ -137,8 +208,8 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
                         var id = ids[j];
                         for (const k in data[i][j]) {
                             var nom_usuario = data[i][j][k];
-                             var log = await service.permissions.create({
-                                fileId: id_unidad,
+                            await service.permissions.create({
+                                fileId: result.data.id,
                                 supportsTeamDrives: true,
                                 sendNotificationEmail: false,
                                 resource: {
@@ -147,43 +218,31 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
                                     emailAddress: nom_usuario
                                 }
                             }).then((success) => {
-                                //Se ha añadido correctamente al usuario
-                                return hp_logs.insertLogs(success,'Se ha insertado el usuario')                                
+                                fs.appendFile('logs.txt', `[SUCCESS] ${fecha}: El usuario ${nom_usuario} Se ha insertado con rol ${rol} en la unidad ${nom_unidades}\n`, function (err) {
+                                    if (err) throw err;
+                                    console.log('File is created successfully.');
+                                  }); 
+                                   
+                                console.log(``)
                             }).catch((err) => {
-                                //Ha habido un error al añadir al usuario
-                                return hp_logs.insertLogs(err,nom_usuario);
+                                if(err.errors[0].reason === "cannotShareTeamDriveWithNonGoogleAccounts"){
+                                    fs.appendFile('logs.txt', `[ERROR] ${fecha}:El usuario ${nom_usuario} no existe, localizado en la unidad ${nom_unidades} con rol ${rol}\n`, function (err) {
+                                        if (err) throw err;
+                                        console.log('File is created successfully.');
+                                      }); 
+                                       
+                                }
+                                
                             });
                         }
-        
+
                     }
                 }
-
-                logs.push(log);
-
-            });
-
-
-
-
-            
-
-        } else {
-
-           var id = service.teamdrives.create({
-                resource: {
-                    name: unidades[i]
-                },
-                requestId: requestId
-            }).then((result) => {
-                console.log('Se ha insertado la unidad');
-                return hp_logs.insertLogs(result,'Se ha insertado la unidad')
             }).catch((err) => {
                 //No se ha insertado la unidad
-                return hp_logs.insertLogs(err,'');
-
+                console.log(`No se ha insertado la unidad ${unidades[i]}`);
             })
 
-            logs.push(await id);
             ids.push(await id);
         }
 
@@ -192,40 +251,13 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
 
 
     if (unidad_existe != true) {
-        for (const i in data) {
-            var rol = roles[i];
-            for (const j in data[i]) {
-                var nom_unidades = unidades[j];
-                var id = ids[j];
-                for (const k in data[i][j]) {
-                    var nom_usuario = data[i][j][k];
-                    var log_permissions = await service.permissions.create({
-                        fileId: id,
-                        supportsTeamDrives: true,
-                        sendNotificationEmail: false,
-                        resource: {
-                            role: rol,
-                            type: 'user',
-                            emailAddress: nom_usuario
-                        }
-                    }).then((success) => {
-                        //Se ha insertado el usuario correctamente
-                    }).catch((err) => {
-                        //No se ha insertado el usuario
-                    });
 
-
-
-                }
-
-            }
-        }
-        logs.push(log_permissions);
+        // logs.push(log_permissions);
 
     }
 
-    console.log(logs);
-    res.render('logs/main',{logs:logs});
+    // console.log(logs);
+    // res.render('logs/main',{logs:logs});
 
 
 
@@ -329,27 +361,30 @@ helpers.listPermissions = async (oauth2, fileId) => {
     });
 
     for (const i in permissions.data) {
-        for(const j in permissions.data[i]){
+        for (const j in permissions.data[i]) {
             console.log(permissions.data[i].id)
         }
-        
+
     }
     return res;
 }
-helpers.addRol = async (oauth2, rol, idUnidad, email, req, res) => {
+helpers.addRol = async (oauth2,email,unidades,values,req, res) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });
-    service.permissions.create({
-        fileId: idUnidad,
-        supportsTeamDrives: true,
-        resource: {
-            role: rol,
-            type: 'user',
-            emailAddress: email
-        }
-    }).then((result) => {
-        req.flash('success', `Se insertado a ${email} con rango ${rol}`)
-        res.redirect('/profile/create_drive_units')
-    })
+    // for (const i in values) {
+    //     console.log(values[i]);
+    // }
+    // service.permissions.create({
+    //     fileId: idUnidad,
+    //     supportsTeamDrives: true,
+    //     resource: {
+    //         role: rol,
+    //         type: 'user',
+    //         emailAddress: email
+    //     }
+    // }).then((result) => {
+    //     req.flash('success', `Se insertado a ${email} con rango ${rol}`)
+    //     res.redirect('/profile/create_drive_units')
+    // })
 }
 
 
@@ -369,6 +404,20 @@ helpers.createLog = (type, description, solution, user) => {
 
     return log;
 
+}
+
+helpers.splitArray = (array)=>{
+    var res = [];
+    if (array != undefined) {
+        for (const j in array) {
+            //Introducimos cada miembro de la unidad como array ejemplo [miembrosUnidad1][MiembrosUnidad2]
+            res.push(array[j].replace(/ /g, "").split(","));
+        }
+    } else {
+        res.push();
+    }
+
+    return res;
 }
 
 
