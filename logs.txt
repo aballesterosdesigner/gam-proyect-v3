@@ -1,5 +1,0 @@
-[SUCCESS] 1/6/2020-15:22:33:651: Se ha creado la unidad Unidad 1
-[ERROR] 1/6/2020-15:22:33:651:El usuario p.garciah@demo.hispacolextech.com no existe, localizado en la unidad Unidad 1 con rol commenter
-[SUCCESS] 1/6/2020-15:22:33:651: Se ha creado la unidad Unidad 2
-[ERROR] 1/6/2020-15:22:33:651:El usuario a.crovettoh@demo.hispacolextech.com no existe, localizado en la unidad Unidad 2 con rol commenter
-[SUCCESS] 1/6/2020-15:22:33:651: Se ha creado la unidad Unidad 3

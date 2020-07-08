@@ -58,13 +58,13 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
     }
 
     if (id_vacio === true && nombre_hoja_vacio === true) {
-        ctrl_general.goToAndLog(req,res,'message','El id y el nombre de la hoja no pueden estar vacíos','/profile/create_drive_units');
-    }else if(id_vacio===true && nombre_hoja_vacio!=true){
-        ctrl_general.goToAndLog(req,res,'message','El nombre de la hoja no puede estar vacío','/profile/create_drive_units');
-    }else if(id_vacio!=true && nombre_hoja_vacio==true){
-        ctrl_general.goToAndLog(req,res,'message','El id de la hoja no puede estar vacío','/profile/create_drive_units');
-    }else{
-       
+        ctrl_general.goToAndLog(req, res, 'message', 'El id y el nombre de la hoja no pueden estar vacíos', '/profile/create_drive_units');
+    } else if (id_vacio === true && nombre_hoja_vacio != true) {
+        ctrl_general.goToAndLog(req, res, 'message', 'El nombre de la hoja no puede estar vacío', '/profile/create_drive_units');
+    } else if (id_vacio != true && nombre_hoja_vacio == true) {
+        ctrl_general.goToAndLog(req, res, 'message', 'El id de la hoja no puede estar vacío', '/profile/create_drive_units');
+    } else {
+
         var unidades = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_unidades)).data.values;
         var values_admin = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_administradores)).data.values;
         var values_gestores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_gestores)).data.values;
@@ -78,31 +78,46 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
         var comentadores = new Array();
         var lectores = new Array();
 
+        var values = [values_admin,values_gestores, values_colaboradores, values_comentadores, values_lectores];
 
-        var values = [values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores];
-       
+        var ctrl_admins = await helpersUnidadesCompartidas.controlUndefined(values_admin);
+        var ctrl_gestores = await helpersUnidadesCompartidas.controlUndefined(values_gestores);
+        var ctrl_comentadores = await helpersUnidadesCompartidas.controlUndefined(values_comentadores);
+        var ctrl_colaboradores = await helpersUnidadesCompartidas.controlUndefined(values_colaboradores);
+        var ctrl_lectores = await helpersUnidadesCompartidas.controlUndefined(values_lectores);
 
-     
-    for(var i in unidades){
-        await admins.push(helpersUnidadesCompartidas.splitArray(values[0][i]));
-        //await gestores.push(helpersUnidadesCompartidas.splitArray(values[1][i]));
-        //await colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2][i]));
-        //await comentadores.push(helpersUnidadesCompartidas.splitArray(values[3][i]));
-        //await lectores.push(helpersUnidadesCompartidas.splitArray(values[4][i]));
+
+        console.log(ctrl_admins);
+        console.log(ctrl_gestores);
+        console.log(ctrl_comentadores);
+        console.log(ctrl_colaboradores);
+        console.log(ctrl_lectores);
+
+
+        if (ctrl_admins != true) {await admins.push(helpersUnidadesCompartidas.splitArray(values[0]));}
+        if (ctrl_gestores != true) {await gestores.push(helpersUnidadesCompartidas.splitArray(values[1]));}
+        if (ctrl_colaboradores != true) {await colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2]));}
+        if (ctrl_comentadores != true) {await comentadores.push(helpersUnidadesCompartidas.splitArray(values[3]));}
+        if (ctrl_lectores != true) {await lectores.push(helpersUnidadesCompartidas.splitArray(values[4]));}
+
+        console.log(`Admins: ${admins}`);
+        console.log(`Gestores: ${gestores}`);
+        console.log(`Comentadores: ${comentadores}`);
+        console.log(`Colaboradores: ${colaboradores}`);
+        console.log(`Lectores: ${lectores}`);
 
         
-    }
 
 
         // helpersUnidadesCompartidas.crearUnidadesSheet(oauth2,unidades,values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores,req, res); 
         //var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
 
-        await helpersUnidadesCompartidas.crearUnidades(oauth2,unidades,req,res);
-        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res);
-        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'fileOrganizer',gestores,req,res);
-        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'writer',colaboradores,req,res);
-        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'commenter',comentadores,req,res);
-        //await helpersUnidadesCompartidas.addRol(oauth2,unidades,'reader',lectores,req,res);
+         await helpersUnidadesCompartidas.crearUnidades(oauth2,unidades,req,res);
+         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res);
+        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'fileOrganizer',gestores,req,res);
+        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'writer',colaboradores,req,res);
+        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'commenter',comentadores,req,res);
+        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'reader',lectores,req,res);
 
 
         res.send('Apago de mala manera');
