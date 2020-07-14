@@ -96,10 +96,10 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
 
 
         if (ctrl_admins != true) {console.log(admins.push(await helpersUnidadesCompartidas.splitArray(values[0])))}
-        // if (ctrl_gestores != true) {await gestores.push(helpersUnidadesCompartidas.splitArray(values[1]));}
-        // if (ctrl_colaboradores != true) {await colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2]));}
-        // if (ctrl_comentadores != true) {await comentadores.push(helpersUnidadesCompartidas.splitArray(values[3]));}
-        // if (ctrl_lectores != true) {await lectores.push(helpersUnidadesCompartidas.splitArray(values[4]));}
+         if (ctrl_gestores != true) {await gestores.push(helpersUnidadesCompartidas.splitArray(values[1]));}
+         if (ctrl_colaboradores != true) {await colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2]));}
+         if (ctrl_comentadores != true) {await comentadores.push(helpersUnidadesCompartidas.splitArray(values[3]));}
+         if (ctrl_lectores != true) {await lectores.push(helpersUnidadesCompartidas.splitArray(values[4]));}
 
         console.log(admins);
         // console.log(`Gestores: ${gestores}`);
@@ -114,11 +114,13 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
         //var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
 
         await helpersUnidadesCompartidas.crearUnidades(oauth2,unidades,req,res);
-        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res);
+        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res).finally(()=>{
+            console.log('acabado');
+        });
         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'fileOrganizer',gestores,req,res);
         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'writer',colaboradores,req,res);
         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'commenter',comentadores,req,res);
-        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'reader',lectores,req,res);
+        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'reader',lectores,req,res); 
 
         res.send('Apago de mala manera');
 

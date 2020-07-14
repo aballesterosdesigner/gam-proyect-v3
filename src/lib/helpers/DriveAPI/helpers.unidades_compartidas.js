@@ -377,28 +377,37 @@ helpers.listPermissions = async (oauth2, fileId) => {
     return res;
 }
 helpers.addRol = async (oauth2, unidades, rol, array, req, res) => {
+    console.log(`Creando a los ${rol}`);
     const service = google.drive({ version: 'v3', auth: oauth2 });
     for (var i in unidades) {
         var idUnidad = await helpers.obtainIdByName(oauth2, unidades[i]);
-        for (var j in array[0][i]) {
-            console.log(`En la unidad ${unidades[i]} con Id: ${idUnidad} se van a añadir los ${rol}: ${array[0][i][j]}`);
-            await service.permissions.create({
-                fileId: idUnidad,
-                supportsTeamDrives: true,
-                sendNotificationEmail: false,
-                resource: {
-                    role: rol,
-                    type: 'user',
-                    emailAddress: array[0][i][j]
-                }
-            })
-                .then(async(res) => {
-                    fs.appendFile('logs.txt', `[SUCCESS]: El usuario ${array[0][i][j]} se ha creado correctamente\n`, (err) => {});
-                })
-                .catch((err) => {
-                    fs.appendFile('logs.txt', `[ERROR]: Creando al usuario ${array[0][i][j]}: ${err.errors[0].reason}\n`, (err) => {});
-                })
+        if(array[0]!=undefined){
+            if(array[0][i] === undefined){
+            }else{
+                  for (var j in array[0][i]) {
+               console.log(`En la unidad ${unidades[i]} con Id: ${idUnidad} se van a añadir los ${rol}: ${array[0][i][j]}`);
+               await service.permissions.create({
+                   fileId: idUnidad,
+                   supportsTeamDrives: true,
+                   sendNotificationEmail: false,
+                   resource: {
+                       role: rol,
+                       type: 'user',
+                       emailAddress: array[0][i][j]
+                   }
+               })
+                   .then(async(res) => {
+                       fs.appendFile('logs.txt', `[SUCCESS]: El usuario ${array[0][i][j]} se ha creado correctamente\n`, (err) => {});
+                   })
+                   .catch((err) => {   
+                       fs.appendFile('logs.txt', `[ERROR]: Creando al usuario ${array[0][i][j]}: ${err.errors[0].reason}\n`, (err) => {});
+                   })  
+           } 
+            }
         }
+//         console.log(await array[0][i]===undefined);
+        
+      
     }
 }
 
