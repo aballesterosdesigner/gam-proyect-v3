@@ -8,23 +8,26 @@ const uuid = require('uuid');
 const list_errors = require('../../json_resources/list_errors.json');
 const helpers = {};
 const hp_logs = require('../LogsAPI/helpers');
-
+var fs = require('fs');
 helpers.crearUnidades = async (oauth2, unidades, req, res) => {
-    
+
+
     const service = google.drive({ version: 'v3', auth: oauth2 });
     for (const i in unidades) {
         var requestId = uuid.v4();
         var UnitName = unidades[i];
         if (await helpers.unidadExiste(oauth2, UnitName) != true) {
-            await service.teamdrives.create({
+            var logs = await service.teamdrives.create({
                 resource: {
                     name: UnitName
 
                 },
                 requestId: requestId
+            }).then(async (res) => {
+                fs.appendFile('logs.txt', `[SUCCESS]: La unidad "${UnitName}" ha sido creada\n`, (err) => {});
             });
         } else {
-            console.log(`La unidad ${UnitName} ya existe`)
+            fs.appendFile('logs.txt', `[WARNING]: La unidad "${UnitName}" ya existe\n`, (err) => {});
         }
     }
 }
@@ -376,57 +379,27 @@ helpers.listPermissions = async (oauth2, fileId) => {
 helpers.addRol = async (oauth2, unidades, rol, array, req, res) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });
     for (var i in unidades) {
-        var UnitExists = await helpers.unidadExiste(oauth2, unidades[i]);
-        var IdUnit = await helpers.obtainIdByName(oauth2, unidades[i]);
-        // console.log(array[i]);
-        if (array[i] != undefined) {
-
-            for (var j in array[i][0]) {
-                var permissionId = await helpers.obtenerIdPermission(array[i][0][j], IdUnit, rol, oauth2);
-                var nom_user = array[i][0][j];
-
-                console.log(permissionId);
-                if (permissionId == undefined) {
-                    console.log(`El usuario ${nom_user} no está dentro de la unidad`);
-                    await service.permissions.create({
-                        fileId: IdUnit,
-                        supportsTeamDrives: true,
-                        useDomainAdminAccess:false,
-                        resource: {
-                            role: rol,
-                            type:'user',
-                            emailAddress: nom_user
-                        }
-
-                    }).catch((err)=>{
-                        console.log(err)
-                    })
-                } else {
-                    console.log(`El usuario ${nom_user} con id de permiso ${permissionId} está dentro de la unidad`);
-                    // await helpers.updateRole(oauth2, IdUnit, permissionId, rol, nom_user,req,res);
-                    service.permissions.delete({
-                        fileId:IdUnit,
-                        permissionId:permissionId,
-                        supportsTeamDrives: true,
-                        
-                    })
-                    .then((resDel)=>{
-                        console.log(`Se ha eliminado correctamente el usuario ${nom_user} cion Id de permiso ${permissionId}`);
-                    })
-                    .catch((errDel)=>{
-                        console.log('Ha habido un error')
-                    })
+        var idUnidad = await helpers.obtainIdByName(oauth2, unidades[i]);
+        for (var j in array[0][i]) {
+            console.log(`En la unidad ${unidades[i]} con Id: ${idUnidad} se van a añadir los ${rol}: ${array[0][i][j]}`);
+            await service.permissions.create({
+                fileId: idUnidad,
+                supportsTeamDrives: true,
+                sendNotificationEmail: false,
+                resource: {
+                    role: rol,
+                    type: 'user',
+                    emailAddress: array[0][i][j]
                 }
-
-
-
-            }
-        } else {
-            await helpers.deleteAllRoles(IdUnit, nom_user, oauth2, rol, req, res);
-
+            })
+                .then(async(res) => {
+                    fs.appendFile('logs.txt', `[SUCCESS]: El usuario ${array[0][i][j]} se ha creado correctamente\n`, (err) => {});
+                })
+                .catch((err) => {
+                    fs.appendFile('logs.txt', `[ERROR]: Creando al usuario ${array[0][i][j]}: ${err.errors[0].reason}\n`, (err) => {});
+                })
         }
     }
-
 }
 
 
@@ -462,24 +435,27 @@ helpers.controlUndefined = async (values) => {
 }
 
 helpers.splitArray = (array) => {
-    var res = [];
+    var res = new Array();
     for (const i in array) {
-        if (array[i] != undefined) {
+        if (array[i].length != 0) {
             for (const j in array[i]) {
                 if (array[i][j] != undefined) {
                     res.push(array[i][j].replace(/ /g, "").split(","));
                 } else {
-                    console.log('Indefined')
+                    var aux = new Array();
+                    res.push(aux);
                 }
             }
-        } else {
-            console.log('Indefined')
 
-            res.push('');
+        } else {
+            var aux = new Array();
+            res.push(aux);
         }
     }
 
     return res;
+
+
 }
 
 helpers.deleteAllRoles = async (IdUnidad, emailAddress, oauth2, rol, req, res) => {
@@ -489,7 +465,7 @@ helpers.deleteAllRoles = async (IdUnidad, emailAddress, oauth2, rol, req, res) =
         fileId: IdUnidad,
         fields: '*',
         supportsTeamDrives: true,
-        useDomainAdminAccess:true
+        useDomainAdminAccess: true
     });
 
     for (var i in permissions.data.permissions) {
@@ -498,12 +474,12 @@ helpers.deleteAllRoles = async (IdUnidad, emailAddress, oauth2, rol, req, res) =
                 permissionId: permissions.data.permissions[i].id,
                 fileId: IdUnidad,
                 fields: '*',
-                useDomainAdminAccess:false,
+                useDomainAdminAccess: false,
                 supportsTeamDrives: true,
                 emailAddress: permissions.data.permissions[i].emailAddress
             }).then((res) => {
                 console.log(`Se han eliminado ${permissions.data.permissions[i].emailAddress}`)
-            }).catch((err)=>{
+            }).catch((err) => {
                 console.log(err);
             });
         }
@@ -532,8 +508,10 @@ helpers.obtenerIdPermission = async (emailAddress, IdUnidad, rol, oauth2) => {
 
     }
 }
-
-helpers.updateRole = async (oauth2, IdUnidad, permissionId, role, emailAddress,req,res) => {
+helpers.writeLogs = async (msg) => {
+ 
+}
+helpers.updateRole = async (oauth2, IdUnidad, permissionId, role, emailAddress, req, res) => {
     const service = google.drive({ version: 'v3', auth: oauth2 });
     if (role === "organizer") {
         helpers.deleteAllRoles(IdUnidad, emailAddress, oauth2, role, req, res)

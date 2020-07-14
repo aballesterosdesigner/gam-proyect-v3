@@ -1,0 +1,7 @@
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[ERROR]: Creando al usuario p.garciah@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[ERROR]: Creando al usuario p.garciah@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[ERROR]: Creando al usuario p.garciah@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[ERROR]: Creando al usuario p.garciah@demo.hispacolextech.com: required
+    

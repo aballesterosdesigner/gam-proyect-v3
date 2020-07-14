@@ -72,6 +72,7 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
         var values_comentadores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_comentadores)).data.values;
         var values_lectores = (await helpers.obtenerValoresSheet(oauth2, google, sheetId, rg_lectores)).data.values;
 
+
         var admins = new Array();
         var gestores = new Array();
         var colaboradores = new Array();
@@ -94,17 +95,17 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
         console.log(ctrl_lectores);
 
 
-        if (ctrl_admins != true) {await admins.push(helpersUnidadesCompartidas.splitArray(values[0]));}
-        if (ctrl_gestores != true) {await gestores.push(helpersUnidadesCompartidas.splitArray(values[1]));}
-        if (ctrl_colaboradores != true) {await colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2]));}
-        if (ctrl_comentadores != true) {await comentadores.push(helpersUnidadesCompartidas.splitArray(values[3]));}
-        if (ctrl_lectores != true) {await lectores.push(helpersUnidadesCompartidas.splitArray(values[4]));}
+        if (ctrl_admins != true) {console.log(admins.push(await helpersUnidadesCompartidas.splitArray(values[0])))}
+        // if (ctrl_gestores != true) {await gestores.push(helpersUnidadesCompartidas.splitArray(values[1]));}
+        // if (ctrl_colaboradores != true) {await colaboradores.push(helpersUnidadesCompartidas.splitArray(values[2]));}
+        // if (ctrl_comentadores != true) {await comentadores.push(helpersUnidadesCompartidas.splitArray(values[3]));}
+        // if (ctrl_lectores != true) {await lectores.push(helpersUnidadesCompartidas.splitArray(values[4]));}
 
-        console.log(`Admins: ${admins}`);
-        console.log(`Gestores: ${gestores}`);
-        console.log(`Comentadores: ${comentadores}`);
-        console.log(`Colaboradores: ${colaboradores}`);
-        console.log(`Lectores: ${lectores}`);
+        console.log(admins);
+        // console.log(`Gestores: ${gestores}`);
+        // console.log(`Comentadores: ${comentadores}`);
+        // console.log(`Colaboradores: ${colaboradores}`);
+        // console.log(`Lectores: ${lectores}`);
 
         
 
@@ -112,13 +113,12 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
         // helpersUnidadesCompartidas.crearUnidadesSheet(oauth2,unidades,values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores,req, res); 
         //var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
 
-         await helpersUnidadesCompartidas.crearUnidades(oauth2,unidades,req,res);
-         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res);
+        await helpersUnidadesCompartidas.crearUnidades(oauth2,unidades,req,res);
+        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res);
         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'fileOrganizer',gestores,req,res);
         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'writer',colaboradores,req,res);
         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'commenter',comentadores,req,res);
         await helpersUnidadesCompartidas.addRol(oauth2,unidades,'reader',lectores,req,res);
-
 
         res.send('Apago de mala manera');
 
