@@ -84,50 +84,24 @@ helpers.forzarPass = async(oauth2,users,activado,req,res)=>{
 
 
 helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telefono, req, res) => {
+    var d = new Date();
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
     var aux_nombres = new Array();
     var err_logs = new Array();
     var aux_alias = new Array();
     var logs = new Array();
     var domain = "";
-    
-    /**for(const i in correos){
-        if (alias === undefined) {
-            // err_logs.push(correos[i]);
-        } else {
-            aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
-        }
+    var fecha = `${d.getDay()}/${d.getMonth()}/${d.getFullYear()} ${d.getUTCHours()}: ${d.getMinutes()} : ${d.getSeconds()} `;
 
-        if (nombres === undefined || apellidos == undefined) {
-            err_logs.push(`${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
-        }
-
-
-
-        domain = correos[i][0].split('@')[1];
-        var user_existe = await helpers.userExist(correos[i],domain,oauth2);
-        switch (user_existe) {
-            case true:
-                
-                break;
-        
-            default:
-
-                break;
-        }
-    }
- */
 
     for (const i in correos) {
 
-        if (alias === undefined) {
-            // err_logs.push(correos[i]);
-        } else {
-            aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
+        //Un poquito de control.
+        if(alias!=undefined){
+            aux_alias.push(alias[i][0].replace(/ /g, "").split(","));s
         }
-
         if (nombres === undefined || apellidos == undefined) {
-            err_logs.push(`${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
+            err_logs.push(`[ERROR]${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
         }
 
         if(telefono[i]===undefined){
