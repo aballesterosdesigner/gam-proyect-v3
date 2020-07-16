@@ -89,11 +89,10 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
     var err_logs = new Array();
     var aux_alias = new Array();
     var logs = new Array();
-
-    for (const i in correos) {
-
+    var domain = "";
+    
+    /**for(const i in correos){
         if (alias === undefined) {
-            console.log('INDEFINIDO')
             // err_logs.push(correos[i]);
         } else {
             aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
@@ -103,37 +102,76 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
             err_logs.push(`${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
         }
 
-        console.log(telefono[i]);
-        service.users.insert({
-            resource: {
-                name: {
-                    familyName: `${apellidos[i][0]}`,
-                    givenName: `${nombres[i][0]}`,
-                },
-                primaryEmail: correos[i][0],
-                password: `${nombres[i]}@2020`,
-                recoveryPhone: `+34${telefono[i]}`,
-                phones: [{
-                    primary: `+34${telefono[i]}`,
-                    value: `+34${telefono[i]}`,
-                    type: 'work'
-                }]
-            },
-        }).then((result) => {
-            for (const j in aux_alias[i]) {
-                console.log(aux_alias[i][j])
-                // console.log(aux_alias[i][j]);
-                service.users.aliases.insert({
-                    userKey: correos[i],
-                    resource: {
-                        alias: aux_alias[i][j]
-                    }
-                }).then((result_alias) => {
-                    console.log(`Tutto benne`);
-                });
-            }
-        })
+
+
+        domain = correos[i][0].split('@')[1];
+        var user_existe = await helpers.userExist(correos[i],domain,oauth2);
+        switch (user_existe) {
+            case true:
+                
+                break;
+        
+            default:
+
+                break;
+        }
     }
+ */
+
+    for (const i in correos) {
+
+        if (alias === undefined) {
+            // err_logs.push(correos[i]);
+        } else {
+            aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
+        }
+
+        if (nombres === undefined || apellidos == undefined) {
+            err_logs.push(`${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
+        }
+
+        if(telefono[i]===undefined){
+            await service.users.insert({
+                resource: {
+                    name: {
+                        familyName: `${apellidos[i][0]}`,
+                        givenName: `${nombres[i][0]}`,
+                    },
+                    primaryEmail: correos[i][0],
+                    password: `${nombres[i]}@2020`,
+                    recoveryPhone: ``,
+                    phones: [{
+                        primary: ``,
+                        value: ``,
+                        type: 'work'
+                    }]
+                },
+            }).then(async(result) => {
+                console.log(`[SUCCESS]: Se ha creado correctamente el usuario ${correos[i][0]}`);
+                for (const j in aux_alias[i]) {
+                    console.log(aux_alias[i][j]);
+                    // console.log(aux_alias[i][j]);
+                    await service.users.aliases.insert({
+                        userKey: correos[i],
+                        resource: {
+                            alias: aux_alias[i][j]
+                        }
+                    }).then((result_alias) => {
+                        console.log(`[SUCCESS]: Se ha insertado el alias ${aux_alias[i][j]} al usuario ${correos[i][0]}`)
+                    });
+                }
+            }).catch((err)=>{
+                if(err.errors[0]["reason"] === "duplicate"){
+                    console.log(`[WARNING]: El usuario ${correos[i][0]} ya existe, por tanto no se ha podido crear`)
+                }else{
+                    console.log(`[ERROR]: ${err.errors[0]["reason"]}`)
+                }
+            })
+        }else{
+
+        }
+        
+    } 
 
 
     req.flash('err_logs', 'Hola');
@@ -141,5 +179,23 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
 
 
 }
+
+helpers.userExist=async(user,domain,oauth2)=>{
+    console.log(user);
+    console.log(`[INFO] Se está comprobando si el usuario ${user} existe en el dominio ${domain}`);
+    const service = google.admin({ version: 'directory_v1', auth: oauth2 });
+    const dat = await service.users.list({domain: domain,fields: '*' });
+    const users = dat.data.users;
+    var user_existe = false;
+    for (const key in users) {
+        if(users[key].primaryEmail === user[0]){
+            user_existe=true;
+        }
+        
+
+    }
+
+    return user_existe;
+};
 
 module.exports = helpers;
