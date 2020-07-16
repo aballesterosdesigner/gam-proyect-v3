@@ -98,7 +98,7 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
 
         //Un poquito de control.
         if(alias!=undefined){
-            aux_alias.push(alias[i][0].replace(/ /g, "").split(","));s
+            aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
         }
         if (nombres === undefined || apellidos == undefined) {
             err_logs.push(`[ERROR]${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
@@ -173,3 +173,5 @@ helpers.userExist=async(user,domain,oauth2)=>{
 };
 
 module.exports = helpers;
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node src/ind
