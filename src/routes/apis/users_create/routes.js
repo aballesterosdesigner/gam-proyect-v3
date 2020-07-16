@@ -45,6 +45,10 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
 });
 
 
+router.get('/profile/create_users/downloadLogs',(req,res)=>{
+    var file ="logsUsersCreate.txt";
+    res.download(file); // Set disposition and send it.
+})
 
 
 

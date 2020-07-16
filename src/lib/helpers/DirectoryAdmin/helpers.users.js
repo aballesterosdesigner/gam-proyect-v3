@@ -5,6 +5,7 @@ const { GoogleAuth } = require('google-auth-library');
 const { OAuth2Client } = require('google-auth-library');
 const credentials = require('../../../../credentials.json');
 const helpers = {};
+const fs = require('fs');
 
 
 /* Mostrar usuarios de un dominio */
@@ -101,10 +102,9 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
             aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
         }
         if (nombres === undefined || apellidos == undefined) {
-            err_logs.push(`[ERROR]${correos[i]} no puede ser creado porque falta el nombre o el apellido`)
+            fs.appendFile('logsUsersCreate.txt', `[ERROR]${correos[i]} no puede ser creado porque falta el nombre o el apellido\n`, (err) => {});
         }
-
-        if(telefono[i]===undefined){
+        if(telefono[i][0]===undefined){
             await service.users.insert({
                 resource: {
                     name: {
@@ -121,7 +121,8 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
                     }]
                 },
             }).then(async(result) => {
-                console.log(`[SUCCESS]: Se ha creado correctamente el usuario ${correos[i][0]}`);
+                fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha creado correctamente el usuario ${correos[i][0]}\n`, (err) => {});
+                console.log(``);
                 for (const j in aux_alias[i]) {
                     console.log(aux_alias[i][j]);
                     // console.log(aux_alias[i][j]);
@@ -131,14 +132,16 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
                             alias: aux_alias[i][j]
                         }
                     }).then((result_alias) => {
-                        console.log(`[SUCCESS]: Se ha insertado el alias ${aux_alias[i][j]} al usuario ${correos[i][0]}`)
+                        fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha insertado el alias ${aux_alias[i][j]} al usuario ${correos[i][0]}\n`, (err) => {});
                     });
                 }
             }).catch((err)=>{
                 if(err.errors[0]["reason"] === "duplicate"){
-                    console.log(`[WARNING]: El usuario ${correos[i][0]} ya existe, por tanto no se ha podido crear`)
+                    fs.appendFile('logsUsersCreate.txt', `[WARNING]: El usuario ${correos[i][0]} ya existe, por tanto no se ha podido crear\n`, (err) => {});
                 }else{
-                    console.log(`[ERROR]: ${err.errors[0]["reason"]}`)
+                    fs.appendFile('logsUsersCreate.txt', `[ERROR]: ${err.errors[0]["reason"]}\n`, (err) => {});
+
+                    console.log(``)
                 }
             })
         }else{
@@ -147,8 +150,6 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
         
     } 
 
-
-    req.flash('err_logs', 'Hola');
     res.redirect('/profile/create_users');
 
 
@@ -173,5 +174,3 @@ helpers.userExist=async(user,domain,oauth2)=>{
 };
 
 module.exports = helpers;
-[nodemon] watching extensions: js,mjs,json
-[nodemon] starting `node src/ind

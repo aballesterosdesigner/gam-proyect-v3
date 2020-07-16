@@ -1,0 +1,3 @@
+[ERROR]administrador@demo.hispacolextech.com no puede ser creado porque falta el nombre o el apellido
+[SUCCESS]: Se ha creado correctamente el usuario administrador2@demo.hispacolextech.com
+[WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
