@@ -100,11 +100,15 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
         //Un poquito de control.
         if(alias!=undefined){
             aux_alias.push(alias[i][0].replace(/ /g, "").split(","));
+        }else{
+            console.log('')
         }
         if (nombres === undefined || apellidos == undefined) {
+            console.log(`[ERROR]${correos[i]} no puede ser creado porque falta el nombre o el apellido\n`);
+            
             fs.appendFile('logsUsersCreate.txt', `[ERROR]${correos[i]} no puede ser creado porque falta el nombre o el apellido\n`, (err) => {});
         }
-        if(telefono[i][0]===undefined){
+        if(telefono[i][0]!=undefined){
             await service.users.insert({
                 resource: {
                     name: {
@@ -116,13 +120,13 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
                     recoveryPhone: ``,
                     phones: [{
                         primary: ``,
-                        value: ``,
+                        value: telefono[i][0],
                         type: 'work'
                     }]
                 },
             }).then(async(result) => {
+                console.log(`[SUCCESS]: Se ha creado correctamente el usuario ${correos[i][0]}\n`);
                 fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha creado correctamente el usuario ${correos[i][0]}\n`, (err) => {});
-                console.log(``);
                 for (const j in aux_alias[i]) {
                     console.log(aux_alias[i][j]);
                     // console.log(aux_alias[i][j]);
@@ -132,15 +136,17 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
                             alias: aux_alias[i][j]
                         }
                     }).then((result_alias) => {
+                        console.log(`[SUCCESS]: Se ha insertado el alias ${aux_alias[i][j]} al usuario ${correos[i][0]}\n`);                        
                         fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha insertado el alias ${aux_alias[i][j]} al usuario ${correos[i][0]}\n`, (err) => {});
                     });
                 }
             }).catch((err)=>{
                 if(err.errors[0]["reason"] === "duplicate"){
+                    console.log(`[WARNING]: El usuario ${correos[i][0]} ya existe, por tanto no se ha podido crear\n`); 
                     fs.appendFile('logsUsersCreate.txt', `[WARNING]: El usuario ${correos[i][0]} ya existe, por tanto no se ha podido crear\n`, (err) => {});
                 }else{
+                    console.log(`[ERROR]: ${err.errors[0]["reason"]}\n`);
                     fs.appendFile('logsUsersCreate.txt', `[ERROR]: ${err.errors[0]["reason"]}\n`, (err) => {});
-
                     console.log(``)
                 }
             })

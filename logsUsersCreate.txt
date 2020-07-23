@@ -1,5 +1,14 @@
-[ERROR]administrador@demo.hispacolextech.com no puede ser creado porque falta el nombre o el apellido
+[WARNING]: El usuario administrador@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
+[ERROR]: No tiene telefono administrador2@demo.hispacolextech.com
+[ERROR]: notFound
+[WARNING]: El usuario administrador@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
+[ERROR]: notFound
 [SUCCESS]: Se ha creado correctamente el usuario administrador2@demo.hispacolextech.com
 [WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[SUCCESS]: Se ha creado correctamente el usuario administrador2@demo.hispacolextech.com
 [WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
+[WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
+[WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
+[WARNING]: El usuario administrador@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
+[ERROR]: notFound
+[WARNING]: El usuario gerente@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
+[WARNING]: El usuario p.garcia@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
