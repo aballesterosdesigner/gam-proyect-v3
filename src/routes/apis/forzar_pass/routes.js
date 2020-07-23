@@ -52,25 +52,33 @@ router.post('/profile/change_password/send', async (req, res) => {
   var logs = new Array();
   const service = google.admin({ version: 'directory_v1', auth: oauth2 });
   if (Array.isArray(users) === false) {
-   var log = await service.users.update({ userKey: 'hola', resource: { changePasswordAtNextLogin: true } })
-      .then((res) => {
-        return hp_logs.insertLogs(res);
+    
+   var log = await service.users.update({ userKey: users, resource: { changePasswordAtNextLogin: false } })
+      .then(async(res) => {
+        console.log(hp_logs.insertLogs(res,`Se ha reseteado`));
+
+        return hp_logs.insertLogs(res,`Se ha reseteado`);
       }).catch((err) => {
         return hp_logs.insertLogs(err);
+      }).finally(()=>{
       })
+
+      logs.push(log);
+
 
   } else {
     for (const i in users) {
-      log = await service.users.update({ userKey:'', resource: { changePasswordAtNextLogin: true } })      
+      console.log(users[i])
+      log = await service.users.update({ userKey:users[i], resource: { changePasswordAtNextLogin: true } })      
       .then((res) => {
-        return hp_logs.insertLogs(res);
+        return hp_logs.insertLogs(res,`Se ha reseteado al usuario ${users[i]}`);
       }).catch(async(err) => {
         return hp_logs.insertLogs(err);
       });
       logs.push(log);
     }
 
-    console.log(logs)
+    //console.log(logs)
     res.render('logs/main',{logs:logs});
     
   }
