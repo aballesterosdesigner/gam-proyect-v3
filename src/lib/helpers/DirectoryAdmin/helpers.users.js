@@ -67,18 +67,17 @@ helpers.activarDobleVerificacion = async (oauth2, email, req, res) => {
 helpers.forzarPass = async(oauth2,users,activado,req,res)=>{
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
     let result;
-    service.users.update({
+   console.log(users);
+    await service.users.update({
         userKey:users,
         resource:{
           changePasswordAtNextLogin:activado
         }
       }).then((res)=>{
-        console.log(res);
+        console.log('success');
     }).catch((err)=>{
         console.log(err);
       });
-
-      return "Hola"
 
 
 }
@@ -156,14 +155,13 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
 }
 
 helpers.userExist=async(user,domain,oauth2)=>{
-    console.log(user);
-    console.log(`[INFO] Se está comprobando si el usuario ${user} existe en el dominio ${domain}`);
+    //console.log(`[INFO] Se está comprobando si el usuario ${user} existe en el dominio ${domain}`);
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
     const dat = await service.users.list({domain: domain,fields: '*' });
     const users = dat.data.users;
     var user_existe = false;
     for (const key in users) {
-        if(users[key].primaryEmail === user[0]){
+        if(users[key].primaryEmail === user){
             user_existe=true;
         }
         
@@ -173,4 +171,103 @@ helpers.userExist=async(user,domain,oauth2)=>{
     return user_existe;
 };
 
+
+helpers.createUsers = async(oauth2,correos,nombres,apellidos,telefonos) =>{
+    const service = google.admin({ version: 'directory_v1', auth: oauth2 });
+
+    var checkCorreos = await helpers.checkIsUndefined(correos);
+    var checkNombres = await helpers.checkIsUndefined(nombres);
+    var checkApellidos = await helpers.checkIsUndefined(apellidos);
+    var checkTelefonos = await helpers.checkIsUndefined(telefonos);
+
+    console.log(checkApellidos)
+    if(checkCorreos===true && checkNombres===true &&  checkApellidos === true && checkTelefonos ===true){
+        for(const i in correos){
+            var tlf = ``;
+            if(correos[i][0]!=undefined && nombres[i][0]!=undefined && apellidos[i][0]!=undefined){
+                var userExist = await helpers.userExist(correos[i][0],'demo.hispacolextech.com',oauth2);
+                if(userExist!=true){
+                    fs.appendFile('logsUsersCreate.txt', `[INFO]:El usuario ${correos[i][0]} no existe\n`, (err) => {});
+
+                    if(telefonos[i]!=undefined){
+                        tlf = telefonos[i][0];
+                    }
+
+                    await service.users.insert({
+                        resource: {
+                            name: {
+                                familyName: `${apellidos[i][0]}`,
+                                givenName: `${nombres[i][0]}`,
+                            },
+                            primaryEmail: correos[i][0],
+                            password: `${nombres[i]}@2020`,
+                            recoveryPhone: ``,
+                            phones: [{
+                                primary: `${tlf}`,
+                                value: ``,
+                                type: 'work'
+                            }]
+                        },
+                    }).then((res)=>{
+                        console.log(`Se ha creado ${correos[i][0]}`);
+                    }).catch((err)=>{
+                        console.log(`error ${correos[i][0]}`);
+                    })
+
+
+                }else{
+                    fs.appendFile('logsUsersCreate.txt', `[INFO]: El usuario ${correos[i][0]} Ya existe \n`, (err) => {});
+
+
+                }
+            }else{
+                console.log(`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`)
+            }    
+        }
+    }else{
+        console.log('Las columnas no pueden estar vacías');
+    }
+    
+}
+helpers.insertAlias = async(oauth2,correos,alias)=>{
+        const service = google.admin({ version: 'directory_v1', auth: oauth2 });
+
+    for(const i in correos){
+        var checkAlias = await helpers.checkIsUndefined(alias);
+        if(checkAlias === true){
+            if(alias[i]!=undefined){
+                var aux_alias = new Array();
+                aux_alias = alias[i][0].replace(/ /g, "").split(",");
+                for(const j in aux_alias){
+                    console.log(aux_alias[j])
+                    await service.users.aliases.insert({
+                        userKey: correos[i][0],
+                        resource: {
+                            alias: aux_alias[j]
+                        }
+                    }).then((result_alias) => {
+                        //console.log(`[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}\n`)
+                        fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}\n`, (err) => {});
+
+                    }).catch((err)=>{
+                        if(err.errors[0]["reason"]==="duplicate"){
+                            fs.appendFile('logsUsersCreate.txt', `[ERROR]: El alias ${aux_alias[j]} ya existe en el usuario ${correos[i][0]}\n`, (err) => {});
+
+                        }
+                    });
+                }
+            }
+        }else{
+            console.log(`La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}`)
+        }
+
+    }
+}
+helpers.checkIsUndefined=async(array)=>{
+    if(array===undefined){
+        return false;
+    }else{
+        return true;
+    }
+}
 module.exports = helpers;

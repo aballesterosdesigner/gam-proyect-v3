@@ -1,3 +1,6 @@
-[ERROR]administrador@demo.hispacolextech.com no puede ser creado porque falta el nombre o el apellido
-[SUCCESS]: Se ha creado correctamente el usuario administrador2@demo.hispacolextech.com
-[WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
+[ERROR]: El alias admin31@demo.hispacolextech.com ya existe en el usuario admin3@demo.hispacolextech.com
+[ERROR]: El alias admin32@demo.hispacolextech.com ya existe en el usuario admin3@demo.hispacolextech.com
+[INFO]: El usuario admin3@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[ERROR]: El alias admin31@demo.hispacolextech.com ya existe en el usuario admin3@demo.hispacolextech.com
+[ERROR]: El alias admin32@demo.hispacolextech.com ya existe en el usuario admin3@demo.hispacolextech.com

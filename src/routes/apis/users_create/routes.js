@@ -34,10 +34,11 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     var apellidos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.apellidos)).data.values);
     var alias = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.alias)).data.values);
     var telefono = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.telefono)).data.values);
-    await hp_users.addUsersSheet(oauth2, nombres, apellidos, correos, alias, telefono, req, res);
+    //await hp_users.addUsersSheet(oauth2, nombres, apellidos, correos, alias, telefono, req, res);
 
 
-
+    await hp_users.createUsers(oauth2,correos,nombres,apellidos,telefono);
+    await hp_users.insertAlias(oauth2,correos,alias);
 
 
 

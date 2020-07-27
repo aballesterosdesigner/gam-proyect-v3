@@ -25,18 +25,21 @@ router.get('/profile/change_password', async (req, res) => {
 
 router.post('/profile/change_password', async (req, res) => {
   const oauth2 = helpers.obtenerAuth(req);
+
+  
   const { domain, dias, eleccion } = req.body;
   // var organizaciones =await  helpers.obtenerClientes(oauth2, google);
-  var forzar = false;
+  var forzar = true;
   var id_cliente = await helpers.obtenerIdCliente(oauth2, domain, google);
   var clientes = await helpers.obtenerClientesDominio(oauth2, domain, google);
   var eventos = await helpers.obtenerEventosAuditoria(oauth2, id_cliente, google);
   var restantes = await helpers.compararRestanteArrays(oauth2, eventos, clientes);
   var recientes = await helpers.usuariosRecientesChangePass(oauth2, eventos, domain, google, dias);
 
+  
   switch (eleccion) {
     case "user":
-      res.render('apis/change_password/all', { restantes: restantes, recientes: recientes, domain: domain });
+    res.render('apis/change_password/all', { restantes: restantes, recientes: recientes, domain: domain });
       break;
     default:
       await helpers.forzarCambioPass(oauth2, recientes, req, res, forzar);
@@ -49,33 +52,32 @@ router.post('/profile/change_password/send', async (req, res) => {
   const users = req.body.user;
   const oauth2 = helpers.obtenerAuth(req);
   var aux = '';
+
   var logs = new Array();
   const service = google.admin({ version: 'directory_v1', auth: oauth2 });
   if (Array.isArray(users) === false) {
-   var log = await service.users.update({ userKey: 'hola', resource: { changePasswordAtNextLogin: true } })
+   var log = await service.users.update({ userKey: users, resource: { changePasswordAtNextLogin: true } })
       .then((res) => {
-        return hp_logs.insertLogs(res);
+        return hp_logs.insertLogs(res,'suc');
       }).catch((err) => {
         return hp_logs.insertLogs(err);
       })
-
   } else {
     for (const i in users) {
       log = await service.users.update({ userKey:'', resource: { changePasswordAtNextLogin: true } })      
-      .then((res) => {
-        return hp_logs.insertLogs(res);
+      .then(async(res) => {
+      
+         return await hp_logs.insertLogs(res,'res');
       }).catch(async(err) => {
-        return hp_logs.insertLogs(err);
+        return await hp_logs.insertLogs(err);
       });
       logs.push(log);
     }
 
-    console.log(logs)
-    res.render('logs/main',{logs:logs});
     
   }
-  
-
+  console.log(logs);
+  res.render('logs/main',{logs:logs})
 });
 
 
