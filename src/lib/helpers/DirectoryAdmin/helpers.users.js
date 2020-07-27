@@ -173,8 +173,9 @@ helpers.userExist=async(user,domain,oauth2)=>{
 
 
 helpers.createUsers = async(oauth2,correos,nombres,apellidos,telefonos) =>{
+    console.log('crear users');
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
-
+    
     var checkCorreos = await helpers.checkIsUndefined(correos);
     var checkNombres = await helpers.checkIsUndefined(nombres);
     var checkApellidos = await helpers.checkIsUndefined(apellidos);

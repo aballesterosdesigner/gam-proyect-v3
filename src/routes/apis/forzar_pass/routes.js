@@ -64,9 +64,8 @@ router.post('/profile/change_password/send', async (req, res) => {
       })
   } else {
     for (const i in users) {
-      log = await service.users.update({ userKey:'', resource: { changePasswordAtNextLogin: true } })      
+      log = await service.users.update({ userKey:users[i], resource: { changePasswordAtNextLogin: true } })      
       .then(async(res) => {
-      
          return await hp_logs.insertLogs(res,'res');
       }).catch(async(err) => {
         return await hp_logs.insertLogs(err);
