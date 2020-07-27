@@ -179,16 +179,16 @@ helpers.createUsers = async(oauth2,correos,nombres,apellidos,telefonos) =>{
     var checkNombres = await helpers.checkIsUndefined(nombres);
     var checkApellidos = await helpers.checkIsUndefined(apellidos);
     var checkTelefonos = await helpers.checkIsUndefined(telefonos);
-
+    var logs = new Array();
     console.log(checkApellidos)
     if(checkCorreos===true && checkNombres===true &&  checkApellidos === true && checkTelefonos ===true){
         for(const i in correos){
             var tlf = ``;
             if(correos[i][0]!=undefined && nombres[i][0]!=undefined && apellidos[i][0]!=undefined){
+                //&var dominio = correos[i][0].split('@')[1];
                 var userExist = await helpers.userExist(correos[i][0],'demo.hispacolextech.com',oauth2);
                 if(userExist!=true){
                     fs.appendFile('logsUsersCreate.txt', `[INFO]:El usuario ${correos[i][0]} no existe\n`, (err) => {});
-
                     if(telefonos[i]!=undefined){
                         tlf = telefonos[i][0];
                     }
@@ -209,9 +209,10 @@ helpers.createUsers = async(oauth2,correos,nombres,apellidos,telefonos) =>{
                             }]
                         },
                     }).then((res)=>{
-                        console.log(`Se ha creado ${correos[i][0]}`);
+                    
+                        fs.appendFile('logsUsersCreate.txt', `[SUCCESS]:El usuario ${correos[i][0]} ha sido creado\n`, (err) => {});
                     }).catch((err)=>{
-                        console.log(`error ${correos[i][0]}`);
+                        console.log(err);
                     })
 
 
@@ -225,9 +226,9 @@ helpers.createUsers = async(oauth2,correos,nombres,apellidos,telefonos) =>{
             }    
         }
     }else{
+
         console.log('Las columnas no pueden estar vacías');
     }
-    
 }
 helpers.insertAlias = async(oauth2,correos,alias)=>{
         const service = google.admin({ version: 'directory_v1', auth: oauth2 });
@@ -235,8 +236,8 @@ helpers.insertAlias = async(oauth2,correos,alias)=>{
     for(const i in correos){
         var checkAlias = await helpers.checkIsUndefined(alias);
         if(checkAlias === true){
-            if(alias[i]!=undefined){
-                var aux_alias = new Array();
+            if(alias[i][0]!=undefined){
+                 var aux_alias = new Array();
                 aux_alias = alias[i][0].replace(/ /g, "").split(",");
                 for(const j in aux_alias){
                     console.log(aux_alias[j])
@@ -250,9 +251,10 @@ helpers.insertAlias = async(oauth2,correos,alias)=>{
                         fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}\n`, (err) => {});
 
                     }).catch((err)=>{
+                        fs.appendFile('logsUsersCreate.txt', `[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}\n`, (err) => {});
+
                         if(err.errors[0]["reason"]==="duplicate"){
                             fs.appendFile('logsUsersCreate.txt', `[ERROR]: El alias ${aux_alias[j]} ya existe en el usuario ${correos[i][0]}\n`, (err) => {});
-
                         }
                     });
                 }

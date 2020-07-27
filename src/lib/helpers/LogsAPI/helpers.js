@@ -1,6 +1,5 @@
 const helpers = {};
 
-
 helpers.insertLogs = async(res,txt)=>{
     // Res puede ser el error o el array de éxito
     if(res.errors){

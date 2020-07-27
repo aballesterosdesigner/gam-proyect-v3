@@ -1,6 +1,3 @@
-[ERROR]: El alias admin31@demo.hispacolextech.com ya existe en el usuario admin3@demo.hispacolextech.com
-[ERROR]: El alias admin32@demo.hispacolextech.com ya existe en el usuario admin3@demo.hispacolextech.com
-[INFO]: El usuario admin3@demo.hispacolextech.com Ya existe 
-[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[ERROR]: El alias admin31@demo.hispacolextech.com ya existe en el usuario admin3@demo.hispacolextech.com
-[ERROR]: El alias admin32@demo.hispacolextech.com ya existe en el usuario admin3@demo.hispacolextech.com
+[ERROR]: El alias god@demo.hispacolextech.com no ha sido creado duplicate
+[ERROR]: El alias god@demo.hispacolextech.com ya existe en el usuario p.garcia@demo.hispacolextech.com
+[ERROR]: El alias yisuscrist@elmundo.es no ha sido creado invalid
