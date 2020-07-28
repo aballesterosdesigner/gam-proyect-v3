@@ -1,20 +1,29 @@
-<<<<<<< HEAD
-[ERROR]: El alias god@demo.hispacolextech.com no ha sido creado duplicate
-[ERROR]: El alias god@demo.hispacolextech.com ya existe en el usuario p.garcia@demo.hispacolextech.com
-[ERROR]: El alias yisuscrist@elmundo.es no ha sido creado invalid
-=======
-[WARNING]: El usuario administrador@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[ERROR]: No tiene telefono administrador2@demo.hispacolextech.com
-[ERROR]: notFound
-[WARNING]: El usuario administrador@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[ERROR]: notFound
-[SUCCESS]: Se ha creado correctamente el usuario administrador2@demo.hispacolextech.com
-[WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[WARNING]: El usuario administrador2@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[WARNING]: El usuario administrador@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[ERROR]: notFound
-[WARNING]: El usuario gerente@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
-[WARNING]: El usuario p.garcia@demo.hispacolextech.com ya existe, por tanto no se ha podido crear
->>>>>>> 29c1f34fa7dedddb5af4fcf320ea59478058e4af
+
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin8@err.hispacolextech.com no existe
+[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin8@err.hispacolextech.com no existe
+[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin8@err.hispacolextech.com no existe
+[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin8@err.hispacolextech.com no existe
+[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin8@err.hispacolextech.com no existe
+[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin8@err.hispacolextech.com no existe
+[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin8@err.hispacolextech.com no existe
+[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin8@err.hispacolextech.com no existe
+[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 

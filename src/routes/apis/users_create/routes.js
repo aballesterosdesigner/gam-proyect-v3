@@ -22,7 +22,7 @@ router.get('/profile/create_users', (req, res) => {
 
 router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     // Sacamos del formulario el id de la hoja
-    const sheetId = req.body.sheetId;
+    const {sheetId,domain} = req.body;
     const oauth2 = helpers.obtenerAuth(req);
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
 
@@ -37,8 +37,8 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     //await hp_users.addUsersSheet(oauth2, nombres, apellidos, correos, alias, telefono, req, res);
 
 
-    //await hp_users.createUsers(oauth2,correos,nombres,apellidos,telefono);
-    await hp_users.insertAlias(oauth2,correos,alias);
+    await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono);
+    //await hp_users.insertAlias(oauth2,correos,alias);
     await res.redirect('/profile/create_users');
 
 

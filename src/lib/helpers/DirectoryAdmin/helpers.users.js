@@ -140,7 +140,7 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
                 }else{
                     fs.appendFile('logsUsersCreate.txt', `[ERROR]: ${err.errors[0]["reason"]}\n`, (err) => {});
 
-                    console.log(``)
+                    
                 }
             })
         }else{
@@ -172,28 +172,26 @@ helpers.userExist=async(user,domain,oauth2)=>{
 };
 
 
-helpers.createUsers = async(oauth2,correos,nombres,apellidos,telefonos) =>{
-    console.log('crear users');
-    const service = google.admin({ version: 'directory_v1', auth: oauth2 });
-    
+helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos) =>{
+    const service = google.admin({ version: 'directory_v1', auth: oauth2 });    
     var checkCorreos = await helpers.checkIsUndefined(correos);
     var checkNombres = await helpers.checkIsUndefined(nombres);
     var checkApellidos = await helpers.checkIsUndefined(apellidos);
     var checkTelefonos = await helpers.checkIsUndefined(telefonos);
+    var fecha = await helpers.obtenerFecha();
+    console.log(`La fecha actual es ${fecha}`);
     var logs = new Array();
     console.log(checkApellidos)
     if(checkCorreos===true && checkNombres===true &&  checkApellidos === true && checkTelefonos ===true){
         for(const i in correos){
             var tlf = ``;
             if(correos[i][0]!=undefined && nombres[i][0]!=undefined && apellidos[i][0]!=undefined){
-                //&var dominio = correos[i][0].split('@')[1];
-                var userExist = await helpers.userExist(correos[i][0],'demo.hispacolextech.com',oauth2);
+                var userExist = await helpers.userExist(correos[i][0],domain,oauth2);
                 if(userExist!=true){
                     fs.appendFile('logsUsersCreate.txt', `[INFO]:El usuario ${correos[i][0]} no existe\n`, (err) => {});
                     if(telefonos[i]!=undefined){
                         tlf = telefonos[i][0];
                     }
-
                     await service.users.insert({
                         resource: {
                             name: {
@@ -201,7 +199,7 @@ helpers.createUsers = async(oauth2,correos,nombres,apellidos,telefonos) =>{
                                 givenName: `${nombres[i][0]}`,
                             },
                             primaryEmail: correos[i][0],
-                            password: `${nombres[i]}@2020`,
+                            password: `${nombres[i][0]}@2020`,
                             recoveryPhone: ``,
                             phones: [{
                                 primary: `${tlf}`,
@@ -214,12 +212,11 @@ helpers.createUsers = async(oauth2,correos,nombres,apellidos,telefonos) =>{
                         fs.appendFile('logsUsersCreate.txt', `[SUCCESS]:El usuario ${correos[i][0]} ha sido creado\n`, (err) => {});
                     }).catch((err)=>{
                         console.log(err);
+                        fs.appendFile('logsUsersCreate.txt', `[ERROR]: Ha habido un error al crear al usuario ${correos[i][0]}\n`, (err) => {});
+
                     })
-
-
                 }else{
                     fs.appendFile('logsUsersCreate.txt', `[INFO]: El usuario ${correos[i][0]} Ya existe \n`, (err) => {});
-
 
                 }
             }else{
@@ -268,6 +265,20 @@ helpers.insertAlias = async(oauth2,correos,alias)=>{
 }
 helpers.checkIsUndefined=async(array)=>{
     if(array===undefined){
+        return false;
+    }else{
+        return true;
+    }
+}
+
+helpers.obtenerFecha=async()=>{
+    var d = new Date();
+    var fecha = `${d.getDay()}/${d.getMonth()}/${d.getFullYear()}`;
+    return fecha;
+}
+
+helpers.unValidDomain=async(value,domain)=> {
+    if(value === domain){
         return false;
     }else{
         return true;
