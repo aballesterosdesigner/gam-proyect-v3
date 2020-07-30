@@ -5,6 +5,7 @@ const { GoogleAuth } = require('google-auth-library');
 const { OAuth2Client } = require('google-auth-library');
 const credentials = require('../../../../credentials.json');
 const helpers = {};
+const hp_logs = require('../../../lib/helpers/LogsAPI/helpers');
 const fs = require('fs');
 
 
@@ -179,20 +180,24 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos) =
     var checkApellidos = await helpers.checkIsUndefined(apellidos);
     var checkTelefonos = await helpers.checkIsUndefined(telefonos);
     var fecha = await helpers.obtenerFecha();
-    console.log(`La fecha actual es ${fecha}`);
     var logs = new Array();
-    console.log(checkApellidos)
+
     if(checkCorreos===true && checkNombres===true &&  checkApellidos === true && checkTelefonos ===true){
         for(const i in correos){
             var tlf = ``;
-            if(correos[i][0]!=undefined && nombres[i][0]!=undefined && apellidos[i][0]!=undefined){
+            if(correos[i][0]!=undefined || nombres[i][0]!=undefined || apellidos[i][0]!=undefined){
                 var userExist = await helpers.userExist(correos[i][0],domain,oauth2);
                 if(userExist!=true){
-                    fs.appendFile('logsUsersCreate.txt', `[INFO]:El usuario ${correos[i][0]} no existe\n`, (err) => {});
-                    if(telefonos[i]!=undefined){
-                        tlf = telefonos[i][0];
+                    var domainUndefined = await helpers.unValidDomain(correos[i][0].split('@')[1],domain);
+                    if(domainUndefined===true){
+                        logs.push(await hp_logs.insertLogs('',`[ERROR]:El dominio ${correos[i][0].split('@')[1]} no es valido en la fila ${parseInt(i)+2}`));
+                        //fs.appendFile('logsUsersCreate.txt', `[ERROR]:El dominio ${correos[i][0].split('@')[1]} no es valido en la fila ${parseInt(i)+2}`, (err) => {});   
+                    }else{
+                        logs.push(hp_logs.insertLogs('',`[INFO]:El usuario ${correos[i][0]} no existe`));
+                        //fs.appendFile('logsUsersCreate.txt', `[INFO]:El usuario ${correos[i][0]} no existe\n`, (err) => {});
                     }
-                    await service.users.insert({
+                    if(telefonos[i]!=undefined){tlf = telefonos[i][0];}
+                    var log = await service.users.insert({
                         resource: {
                             name: {
                                 familyName: `${apellidos[i][0]}`,
@@ -202,66 +207,73 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos) =
                             password: `${nombres[i][0]}@2020`,
                             recoveryPhone: ``,
                             phones: [{
-                                primary: `${tlf}`,
-                                value: ``,
+                                primary: ``,
+                                value: `${tlf}`,
                                 type: 'work'
                             }]
                         },
-                    }).then((res)=>{
-                    
+                    }).then(async(res)=>{
+                        return await hp_logs.insertLogs(res,`El usuario ${correos[i][0]} ha sido creado`);
                         fs.appendFile('logsUsersCreate.txt', `[SUCCESS]:El usuario ${correos[i][0]} ha sido creado\n`, (err) => {});
-                    }).catch((err)=>{
-                        console.log(err);
+                    }).catch(async(err)=>{
+                        //console.log(err);
+                        return await hp_logs.insertLogs(err);
                         fs.appendFile('logsUsersCreate.txt', `[ERROR]: Ha habido un error al crear al usuario ${correos[i][0]}\n`, (err) => {});
-
                     })
+
+                    await logs.push(log);
                 }else{
+                    logs.push(await hp_logs.insertLogs('',`El usuario ${correos[i][0]} Ya existe`));
                     fs.appendFile('logsUsersCreate.txt', `[INFO]: El usuario ${correos[i][0]} Ya existe \n`, (err) => {});
 
                 }
             }else{
-                console.log(`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`)
+                logs.push(await hp_logs.insertLogs('',`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`));
+
+               // console.log(`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`)
             }    
         }
     }else{
-
+        logs.push(await hp_logs.insertLogs('',`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`));
         console.log('Las columnas no pueden estar vacías');
     }
+
+    return logs;
 }
 helpers.insertAlias = async(oauth2,correos,alias)=>{
-        const service = google.admin({ version: 'directory_v1', auth: oauth2 });
-
+    var logs = new Array();
+    const service = google.admin({version: 'directory_v1', auth: oauth2 });
     for(const i in correos){
         var checkAlias = await helpers.checkIsUndefined(alias);
         if(checkAlias === true){
             if(alias[i][0]!=undefined){
-                 var aux_alias = new Array();
+                var aux_alias = new Array();
                 aux_alias = alias[i][0].replace(/ /g, "").split(",");
                 for(const j in aux_alias){
-                    console.log(aux_alias[j])
-                    await service.users.aliases.insert({
+                    var log = await service.users.aliases.insert({
                         userKey: correos[i][0],
-                        resource: {
-                            alias: aux_alias[j]
-                        }
-                    }).then((result_alias) => {
-                        //console.log(`[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}\n`)
-                        fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}\n`, (err) => {});
-
+                        resource: {alias: aux_alias[j]}
+                    }).then((result_alias)=>{
+                        return hp_logs.insertLogs(result_alias,`[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}`);
+                        //fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}\n`, (err) => {});
                     }).catch((err)=>{
-                        fs.appendFile('logsUsersCreate.txt', `[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}\n`, (err) => {});
 
+                        //fs.appendFile('logsUsersCreate.txt', `[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}\n`, (err) => {});
+                        return hp_logs.insertLogs(err,`[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`);
                         if(err.errors[0]["reason"]==="duplicate"){
                             fs.appendFile('logsUsersCreate.txt', `[ERROR]: El alias ${aux_alias[j]} ya existe en el usuario ${correos[i][0]}\n`, (err) => {});
                         }
                     });
+
+                    logs.push(log);
                 }
             }
         }else{
-            console.log(`La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}`)
+            //console.log(`La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}`)
+            logs.push('','La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}');
         }
-
     }
+    return logs;
 }
 helpers.checkIsUndefined=async(array)=>{
     if(array===undefined){

@@ -25,8 +25,7 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     const {sheetId,domain} = req.body;
     const oauth2 = helpers.obtenerAuth(req);
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
-
-
+    var logs = new Array();
 
 
     var correos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.correo)).data.values);
@@ -37,9 +36,27 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     //await hp_users.addUsersSheet(oauth2, nombres, apellidos, correos, alias, telefono, req, res);
 
 
-    await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono);
+    var logs_users= await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono);
+    var logs_alias = await hp_users.insertAlias(oauth2,correos,alias);
+
+
+    for(const i in logs_users){
+        logs.push(logs_users[i]);
+    }
+
+     for(const i in logs_alias){
+        logs.push(logs_alias[i]);
+    }
+
+    //console.log(logs);
+    res.render('logs/main',{logs:logs})
+
+    
+
     //await hp_users.insertAlias(oauth2,correos,alias);
-    await res.redirect('/profile/create_users');
+    //await res.redirect('/profile/create_users');
+
+    
 
 
 

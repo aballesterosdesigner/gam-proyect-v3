@@ -5,6 +5,8 @@ const { OAuth2Client } = require('google-auth-library');
 const credentials = require('../../../../credentials.json');
 const hp_sheets = require('../SheetAPI/hp.sheets');
 const hp_generales = require('../../helpers');
+const hp_logs = require('../../../lib/helpers/LogsAPI/helpers');
+
 const helpers = {};
 
 
@@ -34,7 +36,7 @@ helpers.createGroupsSheets = async (oauth2, miembros, grupos, req, res) => {
             if (exist == true) {
                 /* El grupo ya existe */
                 var id = helpers.obtenerIdGrupoByName(oauth2, grupos[i][0], domain);
-                if (miembros[i] != undefined) {
+                if (miembros[i][0] != undefined) {
                     console.log(`Hay usuarios para insertar en ${grupos[i][0]}`);
                     var arrMiembros = miembros[i][0].replace(/ /g, "").split(",");
                     for (const j in arrMiembros) {
@@ -48,8 +50,8 @@ helpers.createGroupsSheets = async (oauth2, miembros, grupos, req, res) => {
                                 }
                             }).then((result) => {
                                 state.insert_members.logs.push(arrMiembros[j]);
-                            }).catch(() => {
-                                console.log('err');
+                            }).catch((err) => {
+                                console.log(err.errors[0]["reason"]);
                             });
                         }
                     }
@@ -78,11 +80,11 @@ helpers.createGroupsSheets = async (oauth2, miembros, grupos, req, res) => {
     if (state.create_groups.state == true) {
         console.log(state.create_groups.logs);
         req.flash('logs', state.create_groups.logs);
-        res.redirect('/profile/create_groups');
+        //res.redirect('/profile/create_groups');
     }
     if (state.insert_members.state == true) {
         req.flash('logs', state.insert_members.logs);
-        res.redirect('/profile/create_groups');
+        //res.redirect('/profile/create_groups');
     }
 }
 
@@ -129,6 +131,72 @@ helpers.listGroups = async (oauth2, domain) => {
 module.exports = helpers;
 
 
+helpers.createGroups = async (oauth2,grupos)=>{
+    const service = google.admin({ version: 'directory_v1', auth: oauth2 });
+    var logs = new Array();
+    if(grupos != undefined){
+        for(const i in grupos){
+           if(grupos[i][0]!=undefined){
+                var log = await service.groups.insert({
+                    resource: {
+                        name: grupos[i][0].split(',')[0],
+                        email: grupos[i][0]
+                    }
+                }).then((result) => {
+                    return hp_logs.insertLogs(result,`Se ha creado el grupo ${grupos[i][0]}`);
+                }).catch((err) => {
+                    if(err.errors[0]["reason"] === "duplicate"){
+                        return hp_logs.insertLogs(err,`El grupo ${grupos[i][0]} no se ha creado puesto que ya existe`);
+                    }
+                    return hp_logs.insertLogs(err,`Ha habido un error ${err.errors[0]["reason"]}`);
+                });
+                logs.push(log);
+           }
+        }
+    }else{
+        console.log(`La columna de los grupos está vacia`)
+    }
+    return logs;
+}
+
+
+helpers.insertMember = async(oauth2,grupos,miembros)=>{
+    const service = google.admin({ version: 'directory_v1', auth: oauth2 });
+    var logs = new Array();
+   for(const i in grupos){
+    var arrMiembros = miembros[i][0].replace(/ /g, "").split(",");
+    //console.log(`Se van a insertasr en ${grupos[i][0]}`);
+    for(const j in miembros[i]){
+        var arrMiembros = miembros[i][j].replace(/ /g, "").split(",");
+        for (const j in arrMiembros) {
+            console.log(arrMiembros[j])
+            
+ var log = await service.members.insert({
+                groupKey: grupos[i][0],
+                resource: {
+                    email: arrMiembros[j].replace("\n","")
+                }   
+            }).then((result) => {
+                return hp_logs.insertLogs(result,`Se ha insertado el usuario ${arrMiembros[j]}`);
+            }).catch((err) => {
+                return hp_logs.insertLogs(err);
+            }); 
+
+
+            logs.push(log);
+
+ 
+ 
+    /**if (arrMiembros[j] != undefined) {
+                state.insert_members.state = true;
+                console.log(`Se va a añadir al usuario ${arrMiembros[j]} en ${grupos[i][0]}`);
+                
+            } */
+        }
+    }
+}
+return logs;
+}
 
 
 

@@ -1,29 +1,97 @@
-
 [INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[INFO]:El usuario admin8@err.hispacolextech.com no existe
-[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
-[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[INFO]:El usuario admin8@err.hispacolextech.com no existe
-[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[INFO]:El usuario admin8@err.hispacolextech.com no existe
-[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
-[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[INFO]:El usuario admin8@err.hispacolextech.com no existe
-[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
-[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[INFO]:El usuario admin8@err.hispacolextech.com no existe
-[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
-[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[INFO]:El usuario admin8@err.hispacolextech.com no existe
-[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[INFO]:El usuario admin8@err.hispacolextech.com no existe
-[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
-[INFO]:El usuario admin8@err.hispacolextech.com no existe
-[ERROR]: Ha habido un error al crear al usuario admin8@err.hispacolextech.com
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin10@demo.hispacolextech.com no existe
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]:El usuario admin11@demo.hispacolextech.com no existe
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario p.garcia@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[ERROR]:El dominio err.hispacolextech.com no es valido en la fila 4[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[ERROR]:El dominio err.hispacolextech.com no es valido en la fila 4[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[ERROR]:El dominio err.hispacolextech.com no es valido en la fila 4[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[ERROR]:El dominio err.hispacolextech.com no es valido en la fila 4[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin7@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 

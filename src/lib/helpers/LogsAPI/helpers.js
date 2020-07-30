@@ -6,7 +6,7 @@ helpers.insertLogs = async(res,txt)=>{
          var log = {
             "Razon":`${res.errors[0]["message"]} > ${txt}`,
             "Code:":res.code,
-            "type":"error",
+            "Type":"error",
             "Url":res.config.url
         }
         return log;
