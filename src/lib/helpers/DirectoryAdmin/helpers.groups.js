@@ -34,7 +34,7 @@ helpers.createGroupsSheets = async (oauth2, miembros, grupos, req, res) => {
             groups.push(grupos[i][0]);
             var exist = await helpers.checkIfExist(grupos[i][0], oauth2, domain);
             if (exist == true) {
-                /* El grupo ya existe */
+                //El grupo existe.
                 var id = helpers.obtenerIdGrupoByName(oauth2, grupos[i][0], domain);
                 if (miembros[i][0] != undefined) {
                     console.log(`Hay usuarios para insertar en ${grupos[i][0]}`);
@@ -42,7 +42,7 @@ helpers.createGroupsSheets = async (oauth2, miembros, grupos, req, res) => {
                     for (const j in arrMiembros) {
                         if (arrMiembros[j] != undefined) {
                             state.insert_members.state = true;
-                            console.log(`Se va a añadir al usuario ${arrMiembros[j]} en ${grupos[i][0]}`);
+                            //console.log(`Se va a añadir al usuario ${arrMiembros[j]} en ${grupos[i][0]}`);
                             await service.members.insert({
                                 groupKey: grupos[i][0],
                                 resource: {
@@ -171,7 +171,7 @@ helpers.insertMember = async(oauth2,grupos,miembros)=>{
         for (const j in arrMiembros) {
             console.log(arrMiembros[j])
             
- var log = await service.members.insert({
+            var log = await service.members.insert({
                 groupKey: grupos[i][0],
                 resource: {
                     email: arrMiembros[j].replace("\n","")
@@ -181,17 +181,7 @@ helpers.insertMember = async(oauth2,grupos,miembros)=>{
             }).catch((err) => {
                 return hp_logs.insertLogs(err);
             }); 
-
-
             logs.push(log);
-
- 
- 
-    /**if (arrMiembros[j] != undefined) {
-                state.insert_members.state = true;
-                console.log(`Se va a añadir al usuario ${arrMiembros[j]} en ${grupos[i][0]}`);
-                
-            } */
         }
     }
 }

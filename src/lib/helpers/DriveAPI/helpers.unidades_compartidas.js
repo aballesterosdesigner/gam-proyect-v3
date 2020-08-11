@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { google } = require('googleapis');
-
+var fs = require('fs');
 const { GoogleAuth } = require('google-auth-library');
 const { OAuth2Client } = require('google-auth-library');
 const credentials = require('../../../../credentials.json');
@@ -8,10 +8,7 @@ const uuid = require('uuid');
 const list_errors = require('../../json_resources/list_errors.json');
 const helpers = {};
 const hp_logs = require('../LogsAPI/helpers');
-var fs = require('fs');
 helpers.crearUnidades = async (oauth2, unidades, req, res) => {
-
-
     const service = google.drive({ version: 'v3', auth: oauth2 });
     for (const i in unidades) {
         var requestId = uuid.v4();
@@ -266,8 +263,6 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
 
     // console.log(logs);
     // res.render('logs/main',{logs:logs});
-
-
 
 }
 

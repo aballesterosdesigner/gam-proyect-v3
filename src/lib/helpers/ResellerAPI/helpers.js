@@ -10,9 +10,22 @@ const helpers = {};
 
 helpers.listarClientes = async(oauth2)=>{
     var service = google.reseller({version:'v1',auth:oauth2});
-    await service.subscriptions.list({}).then((res)=>{
-        console.log(res);
+    var data = await service.subscriptions.list({});
+    var clientes = new Array();
+    var obj = [];
+    var aux = [];
+
+    for(const i in data.data.subscriptions){
+        await clientes.push(data.data.subscriptions[i].customerDomain);
+    }
+    clientes.forEach(el => {
+        if(!(el in obj)){
+            obj[el]=true;
+            aux.push(el);
+        }
     });
+
+    return aux;
 }
 
 
