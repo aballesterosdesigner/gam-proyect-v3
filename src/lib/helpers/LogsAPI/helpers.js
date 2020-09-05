@@ -1,6 +1,6 @@
 const helpers = {};
 
-helpers.insertLogs = async(res,txt)=>{
+helpers.insertLogs = async(res,txt,Type)=>{
     // Res puede ser el error o el array de éxito
     if(res.errors){
          var log = {
@@ -12,7 +12,7 @@ helpers.insertLogs = async(res,txt)=>{
         return log;
     }else{
         var log = {
-           "Type":"success",
+           "Type":Type,
            "Razon":txt
         }
         return log;

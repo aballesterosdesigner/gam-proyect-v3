@@ -9,24 +9,31 @@ const list_errors = require('../../json_resources/list_errors.json');
 const helpers = {};
 const hp_logs = require('../LogsAPI/helpers');
 helpers.crearUnidades = async (oauth2, unidades, req, res) => {
+    var logs = new Array();
     const service = google.drive({ version: 'v3', auth: oauth2 });
     for (const i in unidades) {
         var requestId = uuid.v4();
         var UnitName = unidades[i];
         if (await helpers.unidadExiste(oauth2, UnitName) != true) {
-            var logs = await service.teamdrives.create({
+            var log = await service.teamdrives.create({
                 resource: {
                     name: UnitName
 
                 },
                 requestId: requestId
             }).then(async (res) => {
-                fs.appendFile('logs.txt', `[SUCCESS]: La unidad "${UnitName}" ha sido creada\n`, (err) => {});
+                return await hp_logs.insertLogs(res,`La unidad ${UnitName} se ha creado correctamente`);
+            }).catch(async(err)=>{
+                return await hp_logs.insertLogs(err,`La unidad ${UnitName} no se ha podido crear`);
             });
+            logs.push(log);
         } else {
+            var log = await hp_logs.insertLogs(``,`La unidad ${UnitName} ya existe`,`error`)
+            logs.push(log);
             fs.appendFile('logs.txt', `[WARNING]: La unidad "${UnitName}" ya existe\n`, (err) => {});
         }
     }
+    return logs;
 }
 
 
@@ -372,7 +379,7 @@ helpers.listPermissions = async (oauth2, fileId) => {
     return res;
 }
 helpers.addRol = async (oauth2, unidades, rol, array, req, res) => {
-    console.log(`Creando a los ${rol}`);
+   var logs = new Array();
     const service = google.drive({ version: 'v3', auth: oauth2 });
     for (var i in unidades) {
         var idUnidad = await helpers.obtainIdByName(oauth2, unidades[i]);
@@ -380,8 +387,7 @@ helpers.addRol = async (oauth2, unidades, rol, array, req, res) => {
             if(array[0][i] === undefined){
             }else{
                   for (var j in array[0][i]) {
-               console.log(`En la unidad ${unidades[i]} con Id: ${idUnidad} se van a añadir los ${rol}: ${array[0][i][j]}`);
-               await service.permissions.create({
+               var log = await service.permissions.create({
                    fileId: idUnidad,
                    supportsTeamDrives: true,
                    sendNotificationEmail: false,
@@ -390,13 +396,15 @@ helpers.addRol = async (oauth2, unidades, rol, array, req, res) => {
                        type: 'user',
                        emailAddress: array[0][i][j]
                    }
-               })
-                   .then(async(res) => {
-                       fs.appendFile('logs.txt', `[SUCCESS]: El usuario ${array[0][i][j]} se ha creado correctamente\n`, (err) => {});
-                   })
-                   .catch((err) => {   
-                       fs.appendFile('logs.txt', `[ERROR]: Creando al usuario ${array[0][i][j]}: ${err.errors[0].reason}\n`, (err) => {});
-                   })  
+                })
+                .then(async(res) => {
+                    return await hp_logs.insertLogs(res,`[SUCCESS]: El usuario ${array[0][i][j]} se ha creado correctamente en la unidad con Id: ${idUnidad} `,`success`);    
+                })
+                   .catch(async(err) => {
+                       return await hp_logs.insertLogs(err,`[ERROR]: Creando al usuario ${array[0][i][j]}`,'error');   
+                       fs.appendFile('logs.txt', ``, (err) => {});
+                })
+                logs.push(log);  
            } 
             }
         }
@@ -404,6 +412,7 @@ helpers.addRol = async (oauth2, unidades, rol, array, req, res) => {
         
       
     }
+    return logs;
 }
 
 
@@ -493,7 +502,8 @@ helpers.deleteAllRoles = async (IdUnidad, emailAddress, oauth2, rol, req, res) =
 }
 
 
-helpers.userIsCreated = async (emailAddress, IdUnidad, oauth2) => {
+helpers.userIsInSharedDrive = async (emailAddress, IdUnidad, oauth2) => {
+    
 }
 
 helpers.obtenerIdPermission = async (emailAddress, IdUnidad, rol, oauth2) => {

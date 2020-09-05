@@ -33,7 +33,7 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
     var oauth2 = helpers.obtenerAuth(req);
     const service = google.drive({ version: 'v3', auth: oauth2 });
     const parametros = require('./config');
-
+    var logs = new Array();
 
 
 
@@ -88,12 +88,11 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
         var ctrl_lectores = await helpersUnidadesCompartidas.controlUndefined(values_lectores);
 
 
-        console.log(ctrl_admins);
+        /*console.log(ctrl_admins);
         console.log(ctrl_gestores);
         console.log(ctrl_comentadores);
         console.log(ctrl_colaboradores);
-        console.log(ctrl_lectores);
-
+        console.log(ctrl_lectores); */
 
         if (ctrl_admins != true) {console.log(admins.push(await helpersUnidadesCompartidas.splitArray(values[0])))}
          if (ctrl_gestores != true) {await gestores.push(helpersUnidadesCompartidas.splitArray(values[1]));}
@@ -101,7 +100,7 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
          if (ctrl_comentadores != true) {await comentadores.push(helpersUnidadesCompartidas.splitArray(values[3]));}
          if (ctrl_lectores != true) {await lectores.push(helpersUnidadesCompartidas.splitArray(values[4]));}
 
-        console.log(admins);
+        //console.log(admins);
         // console.log(`Gestores: ${gestores}`);
         // console.log(`Comentadores: ${comentadores}`);
         // console.log(`Colaboradores: ${colaboradores}`);
@@ -113,18 +112,23 @@ router.post('/profile/create_drive_units', isLoggedIn, async (req, res) => {
         // helpersUnidadesCompartidas.crearUnidadesSheet(oauth2,unidades,values_admin,values_gestores,values_colaboradores,values_comentadores,values_lectores,req, res); 
         //var roles = ['organizer', 'fileOrganizer', 'writer', 'commenter', 'reader'];
 
-        await helpersUnidadesCompartidas.crearUnidades(oauth2,unidades,req,res);
-        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res).finally(()=>{
-            console.log('acabado');
-        });
-        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'fileOrganizer',gestores,req,res);
-        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'writer',colaboradores,req,res);
-        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'commenter',comentadores,req,res);
-        await helpersUnidadesCompartidas.addRol(oauth2,unidades,'reader',lectores,req,res); 
+        var logsUnits = await helpersUnidadesCompartidas.crearUnidades(oauth2,unidades,req,res);
+        var logsAdmin = await helpersUnidadesCompartidas.addRol(oauth2,unidades,'organizer',admins,req,res);
+        var logsFileOrganizer = await helpersUnidadesCompartidas.addRol(oauth2,unidades,'fileOrganizer',gestores,req,res);
+        var logsWriter = await helpersUnidadesCompartidas.addRol(oauth2,unidades,'writer',colaboradores,req,res);
+        var logsCommenter = await helpersUnidadesCompartidas.addRol(oauth2,unidades,'commenter',comentadores,req,res);
+        var logsReader = await helpersUnidadesCompartidas.addRol(oauth2,unidades,'reader',lectores,req,res); 
 
-        res.send('Apago de mala manera');
+        for (const i in logsUnits) {logs.push(logsUnits[i]);}
+        for(const i in logsAdmin){logs.push(logsAdmin[i])}
+        for(const i in logsFileOrganizer){logs.push(logsFileOrganizer[i]);}
+        for(const i in logsWriter){logs.push(logsWriter[i]);}
+        for(const i in logsCommenter){logs.push(logsCommenter[i]);}
+        for(const i in logsReader){logs.push(logsReader[i]);}
+  
+        res.render('logs/main',{logs:logs})
+}
 
-    }
 
 
 

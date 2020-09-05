@@ -6,7 +6,7 @@ module.exports = {
         user: process.env.DATABASE_USER || 'root',
         password: process.env.DATABASE_PASSWORD || 'AntonioHTC@2020',
         database: process.env.DATABASE_NAME || 'interfaz_db',
-        /* Abir para hacer el */
+        //Abir para hacer el
         //socketPath: `/cloudsql/gam-sql-demo-278414:us-east1:db-gam-demo`
     }
 };

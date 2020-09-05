@@ -1,0 +1,57 @@
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[ERROR]: Creando al usuario a.crovettoh@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[SUCCESS]: El usuario p.garcia@demo.hispacolextech.com se ha creado correctamente
+[SUCCESS]: El usuario j.torreblanca@demo.hispacolextech.com se ha creado correctamente
+[SUCCESS]: El usuario p.garcia@demo.hispacolextech.com se ha creado correctamente
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[ERROR]: Creando al usuario a.crovettoh@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[SUCCESS]: El usuario p.garcia@demo.hispacolextech.com se ha creado correctamente
+[SUCCESS]: El usuario j.torreblanca@demo.hispacolextech.com se ha creado correctamente
+[SUCCESS]: El usuario p.garcia@demo.hispacolextech.com se ha creado correctamente
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[ERROR]: Creando al usuario a.crovettoh@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[SUCCESS]: El usuario p.garcia@demo.hispacolextech.com se ha creado correctamente
+[SUCCESS]: El usuario j.torreblanca@demo.hispacolextech.com se ha creado correctamente
+[SUCCESS]: El usuario p.garcia@demo.hispacolextech.com se ha creado correctamente
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[ERROR]: Creando al usuario a.crovettoh@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[ERROR]: Creando al usuario a.crovettoh@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[ERROR]: Creando al usuario a.crovettoh@demo.hispacolextech.com: cannotShareTeamDriveWithNonGoogleAccounts
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe
+[WARNING]: La unidad "Unidad 1" ya existe
+[WARNING]: La unidad "Unidad 2" ya existe

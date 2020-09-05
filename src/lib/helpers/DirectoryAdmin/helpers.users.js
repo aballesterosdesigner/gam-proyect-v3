@@ -6,6 +6,8 @@ const { OAuth2Client } = require('google-auth-library');
 const credentials = require('../../../../credentials.json');
 const helpers = {};
 const hp_logs = require('../../../lib/helpers/LogsAPI/helpers');
+const hp_sheets = require('../../../lib/helpers/SheetAPI/hp.sheets');
+
 const fs = require('fs');
 
 
@@ -139,9 +141,7 @@ helpers.addUsersSheet = async (oauth2, nombres, apellidos, correos, alias, telef
                 if(err.errors[0]["reason"] === "duplicate"){
                     fs.appendFile('logsUsersCreate.txt', `[WARNING]: El usuario ${correos[i][0]} ya existe, por tanto no se ha podido crear\n`, (err) => {});
                 }else{
-                    fs.appendFile('logsUsersCreate.txt', `[ERROR]: ${err.errors[0]["reason"]}\n`, (err) => {});
-
-                    
+                    fs.appendFile('logsUsersCreate.txt', `[ERROR]: ${err.errors[0]["reason"]}\n`, (err) => {});           
                 }
             })
         }else{
@@ -173,7 +173,7 @@ helpers.userExist=async(user,domain,oauth2)=>{
 };
 
 
-helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos) =>{
+helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sheetId) =>{
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });    
     var checkCorreos = await helpers.checkIsUndefined(correos);
     var checkNombres = await helpers.checkIsUndefined(nombres);
@@ -182,21 +182,26 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos) =
     var fecha = await helpers.obtenerFecha();
     var logs = new Array();
 
+
     if(checkCorreos===true && checkNombres===true &&  checkApellidos === true && checkTelefonos ===true){
         for(const i in correos){
+            var checkCorreo = await helpers.checkIsUndefined(correos[i]);
+            var checkNombre = await helpers.checkIsUndefined(nombres[i]);
+            var checkApellido = await helpers.checkIsUndefined(apellidos[i]);
+            var passAl = await helpers.generatePassword(10);            
+            
             var tlf = ``;
-            if(correos[i][0]!=undefined || nombres[i][0]!=undefined || apellidos[i][0]!=undefined){
+            if(checkCorreo===true && checkNombre===true && checkApellido===true){
                 var userExist = await helpers.userExist(correos[i][0],domain,oauth2);
                 if(userExist!=true){
                     var domainUndefined = await helpers.unValidDomain(correos[i][0].split('@')[1],domain);
                     if(domainUndefined===true){
-                        logs.push(await hp_logs.insertLogs('',`[ERROR]:El dominio ${correos[i][0].split('@')[1]} no es valido en la fila ${parseInt(i)+2}`));
-                        //fs.appendFile('logsUsersCreate.txt', `[ERROR]:El dominio ${correos[i][0].split('@')[1]} no es valido en la fila ${parseInt(i)+2}`, (err) => {});   
+                    //logs.push(await hp_logs.insertLogs('',`[ERROR]:El dominio ${correos[i][0].split('@')[1]} no es valido en la fila ${parseInt(i)+2}`,'error'));
                     }else{
-                        logs.push(hp_logs.insertLogs('',`[INFO]:El usuario ${correos[i][0]} no existe`));
-                        //fs.appendFile('logsUsersCreate.txt', `[INFO]:El usuario ${correos[i][0]} no existe\n`, (err) => {});
+                        logs.push(hp_logs.insertLogs('',`[INFO]:El usuario ${correos[i][0]} no existe`,'warning'));
                     }
                     if(telefonos[i]!=undefined){tlf = telefonos[i][0];}
+            
                     var log = await service.users.insert({
                         resource: {
                             name: {
@@ -204,41 +209,43 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos) =
                                 givenName: `${nombres[i][0]}`,
                             },
                             primaryEmail: correos[i][0],
-                            password: `${nombres[i][0]}@2020`,
+                            password: `${passAl}`,
+                            //
                             recoveryPhone: ``,
                             phones: [{
-                                primary: ``,
+                                //primary: ``,
                                 value: `${tlf}`,
                                 type: 'work'
                             }]
                         },
-                    }).then(async(res)=>{
-                        return await hp_logs.insertLogs(res,`El usuario ${correos[i][0]} ha sido creado`);
-                        fs.appendFile('logsUsersCreate.txt', `[SUCCESS]:El usuario ${correos[i][0]} ha sido creado\n`, (err) => {});
+                    }).then((res)=>{
+
+/**    hp_sheets.write(oauth2,sheetId,` Pass!A2:A`,[[correos[i][0]]]);
+    hp_sheets.write(oauth2,sheetId,'Pass!B2:B',[[passAl]]);
+ */
+console.log(i);
+                        return hp_logs.insertLogs(res,`El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`,'success');
                     }).catch(async(err)=>{
                         //console.log(err);
                         return await hp_logs.insertLogs(err);
-                        fs.appendFile('logsUsersCreate.txt', `[ERROR]: Ha habido un error al crear al usuario ${correos[i][0]}\n`, (err) => {});
                     })
-
                     await logs.push(log);
                 }else{
-                    logs.push(await hp_logs.insertLogs('',`El usuario ${correos[i][0]} Ya existe`));
-                    fs.appendFile('logsUsersCreate.txt', `[INFO]: El usuario ${correos[i][0]} Ya existe \n`, (err) => {});
-
-                }
+                    logs.push(await hp_logs.insertLogs('',`El usuario ${correos[i][0]} Ya existe`,'warning'));
+                } 
             }else{
                 logs.push(await hp_logs.insertLogs('',`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`));
-
-               // console.log(`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`)
-            }    
+            }  
         }
     }else{
-        logs.push(await hp_logs.insertLogs('',`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`));
-        console.log('Las columnas no pueden estar vacías');
+        //logs.push(await hp_logs.insertLogs('',`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`));
     }
-
     return logs;
+}
+
+
+helpers.sendMail = async () =>{
+  
 }
 helpers.insertAlias = async(oauth2,correos,alias)=>{
     var logs = new Array();
@@ -246,30 +253,34 @@ helpers.insertAlias = async(oauth2,correos,alias)=>{
     for(const i in correos){
         var checkAlias = await helpers.checkIsUndefined(alias);
         if(checkAlias === true){
-            if(alias[i][0]!=undefined){
+            if(alias[i]!=undefined){
                 var aux_alias = new Array();
                 aux_alias = alias[i][0].replace(/ /g, "").split(",");
+                console.log(aux_alias);
                 for(const j in aux_alias){
+                    console.log(aux_alias[j])
                     var log = await service.users.aliases.insert({
                         userKey: correos[i][0],
                         resource: {alias: aux_alias[j]}
                     }).then((result_alias)=>{
-                        return hp_logs.insertLogs(result_alias,`[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}`);
-                        //fs.appendFile('logsUsersCreate.txt', `[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}\n`, (err) => {});
+                        return hp_logs.insertLogs(result_alias,`[SUCCESS]: Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}`,'success');
                     }).catch((err)=>{
-
-                        //fs.appendFile('logsUsersCreate.txt', `[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}\n`, (err) => {});
-                        return hp_logs.insertLogs(err,`[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`);
-                        if(err.errors[0]["reason"]==="duplicate"){
-                            fs.appendFile('logsUsersCreate.txt', `[ERROR]: El alias ${aux_alias[j]} ya existe en el usuario ${correos[i][0]}\n`, (err) => {});
+                        switch (err.errors[0]["reason"]) {
+                            case 'duplicate':
+                                return hp_logs.insertLogs('',`[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`,'warning');                
+                            break;
+                        
+                            default:
+                                return hp_logs.insertLogs(err,`[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`);                
+                            break;
                         }
+                       
                     });
 
                     logs.push(log);
                 }
             }
         }else{
-            //console.log(`La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}`)
             logs.push('','La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}');
         }
     }
@@ -279,7 +290,12 @@ helpers.checkIsUndefined=async(array)=>{
     if(array===undefined){
         return false;
     }else{
+        if(array[0]===undefined){
+            return false;
+        }
         return true;
+
+
     }
 }
 
@@ -295,5 +311,27 @@ helpers.unValidDomain=async(value,domain)=> {
     }else{
         return true;
     }
+}
+
+helpers.obtainById=async(id,oauth2,domain)=>{
+    const service = google.admin({version:'directory_v1',auth:oauth2});
+    var usuario = '';
+    const usuarios = await service.users.list({domain:domain});
+    for(const i in usuarios.data.users){
+        if(usuarios.data.users[i].id === id){
+            usuario = usuarios.data.users[i].primaryEmail;
+        }
+    }
+
+    return usuario;
+}
+
+helpers.generatePassword = async(longitud) =>{
+
+  var caracteres = "abcdefghijkmnpqrtuvwxyzABCDEFGHIJKLMNPQRTUVWXYZ2346789";
+  var contraseña = "";
+  for (i=0; i<longitud; i++) contraseña += caracteres.charAt(Math.floor(Math.random()*caracteres.length));
+  return contraseña;
+
 }
 module.exports = helpers;

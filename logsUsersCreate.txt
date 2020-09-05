@@ -95,3 +95,6 @@
 [INFO]: El usuario admin8@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario admin10@demo.hispacolextech.com Ya existe 
 [INFO]: El usuario admin11@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario a.ballesteros@demo.hispacolextech.com Ya existe 
+[INFO]: El usuario a.ballesteros@demo.hispacolextech.com Ya existe 
+Usuario: roberto.lopez@demo.hispacolextech.com pass: yFWBmnqakDUsuario: laura.garcia@demo.hispacolextech.com pass: YgjLdcBYD$Usuario: laura2.garcia@demo.hispacolextech.com pass: 6FmDT4HPF&

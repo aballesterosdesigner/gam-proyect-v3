@@ -23,17 +23,17 @@ const parametros = require('./config');
 
 router.get('/profile/create_groups',async(req,res)=>{
     const oauth2 = hp_general.obtenerAuth(req);
-    var clientes = await hp_reseller.listarClientes(oauth2);
+    //var clientes = await hp_reseller.listarClientes(oauth2);
     res.render('apis/create_groups/main');
 });
 
 router.post('/profile/create_groups',async(req,res)=>{
     var logs = new Array();
-    const rg_grupos = `${nameSheet}!${parametros.grupos}`; 
-    const rg_miembros = `${nameSheet}!${parametros.miembros}`;
     const oauth2 = hp_general.obtenerAuth(req);
     const {sheetId,nameSheet} = req.body;
-  
+    const rg_grupos = `${nameSheet}!${parametros.grupos}`; 
+    const rg_miembros = `${nameSheet}!${parametros.miembros}`;
+    
     var grupos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, rg_grupos)).data.values);
     var miembros = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, rg_miembros)).data.values);
     var resultGroups = await hp_groups.createGroups(oauth2,grupos);

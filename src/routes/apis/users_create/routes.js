@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const nodemailer = require("nodemailer");
 const { google } = require('googleapis');
 const { isLoggedIn } = require('../../../lib/auth');
 const { renderUserProfile } = require('../../../controllers/user.controller');
@@ -25,9 +26,10 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     const {sheetId,domain} = req.body;
     const oauth2 = helpers.obtenerAuth(req);
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
+    const gmail = google.gmail({version:'v1',auth:oauth2});
     var logs = new Array();
 
-
+    var idUser = req.user.profile.id;
     var correos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.correo)).data.values);
     var nombres = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.nombre)).data.values);
     var apellidos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.apellidos)).data.values);
@@ -36,36 +38,23 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     //await hp_users.addUsersSheet(oauth2, nombres, apellidos, correos, alias, telefono, req, res);
 
 
-    var logs_users= await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono);
+    var logs_users= await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono,sheetId);
     var logs_alias = await hp_users.insertAlias(oauth2,correos,alias);
-
-
-    for(const i in logs_users){
-        logs.push(logs_users[i]);
-    }
-
-     for(const i in logs_alias){
-        logs.push(logs_alias[i]);
-    }
-
-    //console.log(logs);
-    res.render('logs/main',{logs:logs})
-
     
 
+    for(const i in logs_users){logs.push(logs_users[i])}
+    for(const i in logs_alias){logs.push(logs_alias[i])}
+        var user = await hp_users.obtainById(idUser,oauth2,domain);
+        //await res.download("usuarios.txt");
+        await res.render('logs/main',{logs:logs});
+        
     //await hp_users.insertAlias(oauth2,correos,alias);
     //await res.redirect('/profile/create_users');
-
-    
-
-
-
-
 });
 
 
-router.get('/profile/create_users/downloadLogs',(req,res)=>{
-    var file ="logsUsersCreate.txt";
+router.get('/profile/create_users/download',(req,res)=>{
+    var file ="usuarios.txt";
     res.download(file); // Set disposition and send it.
 })
 

@@ -167,6 +167,7 @@ helpers.insertMember = async(oauth2,grupos,miembros)=>{
     var arrMiembros = miembros[i][0].replace(/ /g, "").split(",");
     //console.log(`Se van a insertasr en ${grupos[i][0]}`);
     for(const j in miembros[i]){
+        
         var arrMiembros = miembros[i][j].replace(/ /g, "").split(",");
         for (const j in arrMiembros) {
             console.log(arrMiembros[j])
