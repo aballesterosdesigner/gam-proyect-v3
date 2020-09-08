@@ -13,6 +13,7 @@ const hp_sheets = require('../../../lib/helpers/SheetAPI/hp.sheets');
 const hp_users = require('../../../lib/helpers/DirectoryAdmin/helpers.users');
 const uuid = require('uuid');
 var parametros = require('./config');
+const { write } = require('../../../lib/helpers/SheetAPI/hp.sheets');
 
 
 
@@ -39,16 +40,16 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
 
 
     var logs_users= await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono,sheetId);
-    var logs_alias = await hp_users.insertAlias(oauth2,correos,alias);
+    //var logs_alias = await hp_users.insertAlias(oauth2,correos,alias);
     
 
     for(const i in logs_users){logs.push(logs_users[i])}
-    for(const i in logs_alias){logs.push(logs_alias[i])}
+    //for(const i in logs_alias){logs.push(logs_alias[i])}
         var user = await hp_users.obtainById(idUser,oauth2,domain);
         //await res.download("usuarios.txt");
         await res.render('logs/main',{logs:logs});
         
-    //await hp_users.insertAlias(oauth2,correos,alias);
+        await hp_users.insertAlias(oauth2,correos,alias);
     //await res.redirect('/profile/create_users');
 });
 
@@ -56,7 +57,35 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
 router.get('/profile/create_users/download',(req,res)=>{
     var file ="usuarios.txt";
     res.download(file); // Set disposition and send it.
-})
+});
+
+router.get('/profile/create_users/test',async(req,res)=>{
+    const auth = helpers.obtenerAuth(req);
+    var arr = new Array();
+    var res = [[1],[2],[3]];
+    var data =  await hp_sheets.obtenerValoresSheet(auth, google, '1g9IrcmW9_Bzcsv8BgBT198tneIzOTHbkbq29cVnVghA', 'Pass!A1:A');
+
+    var longData = data.data.values.length;
+    var longRes = res.length;
+
+    var limit = longData+parseInt(1);
+    var fin = limit+longRes;
+
+    var cont = 1;
+
+    for(var i = 0;i<=res.length-1;i++){
+        console.log(cont++);
+        console.log(res[i]);
+
+        //console.log(cont++);
+        //hp_sheets.write(auth,'1g9IrcmW9_Bzcsv8BgBT198tneIzOTHbkbq29cVnVghA',`Pass!A${i}`);
+    }
+    
+
+
+
+
+});
 
 
 
