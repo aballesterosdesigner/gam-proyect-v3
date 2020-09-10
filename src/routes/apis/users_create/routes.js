@@ -59,29 +59,10 @@ router.get('/profile/create_users/download',(req,res)=>{
     res.download(file); // Set disposition and send it.
 });
 
-router.get('/profile/create_users/test',async(req,res)=>{
-    const auth = helpers.obtenerAuth(req);
-    var arr = new Array();
-    var res = [[1],[2],[3]];
-    var data =  await hp_sheets.obtenerValoresSheet(auth, google, '1g9IrcmW9_Bzcsv8BgBT198tneIzOTHbkbq29cVnVghA', 'Pass!A1:A');
+router.get('/profile/create_users/test',async(req,res)=>{   
 
-    var longData = data.data.values.length;
-    var longRes = res.length;
-
-    var limit = longData+parseInt(1);
-    var fin = limit+longRes;
-
-    var cont = 1;
-
-    for(var i = 0;i<=res.length-1;i++){
-        console.log(cont++);
-        console.log(res[i]);
-
-        //console.log(cont++);
-        //hp_sheets.write(auth,'1g9IrcmW9_Bzcsv8BgBT198tneIzOTHbkbq29cVnVghA',`Pass!A${i}`);
-    }
+    hp_sheets.write(oauth,'SheetId','range',values);
     
-
 
 
 
