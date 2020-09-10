@@ -131,7 +131,7 @@ helpers.crearUnidadesSheet = async (oauth2, unidades, values_admin, values_gesto
 
             }).then(async (res) => {
                 for (const key in res.data.permissions) {
-                    if (res.data.permissions[key].emailAddress != 'a.ballesteros@demo.hispacolextech.com') {
+                    if (res.data.permissions[key].emailAddress != 'a.crovetto@hispacolextech.com') {
                         var log = await service.permissions.delete({
                             fileId: id_unidad,
                             supportsTeamDrives: true,
@@ -482,7 +482,7 @@ helpers.deleteAllRoles = async (IdUnidad, emailAddress, oauth2, rol, req, res) =
     });
 
     for (var i in permissions.data.permissions) {
-        if (permissions.data.permissions[i].emailAddress != 'a.ballesteros@demo.hispacolextech.com' && permissions.data.permissions[i].role === rol) {
+        if (permissions.data.permissions[i].emailAddress != 'a.crovetto@hispacolextech.com' && permissions.data.permissions[i].role === rol) {
             await service.permissions.delete({
                 permissionId: permissions.data.permissions[i].id,
                 fileId: IdUnidad,

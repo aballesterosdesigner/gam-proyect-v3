@@ -20,7 +20,6 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
     return data;
 }
 helpers.write = async(auth,sheetId,range,values,hoja)=>{
-    console.log('escribiendo');
     const service = google.sheets({version:'v4',auth});
     var values_sheet = await service.spreadsheets.values.get({
         spreadsheetId:sheetId,
