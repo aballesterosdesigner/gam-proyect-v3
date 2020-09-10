@@ -40,11 +40,11 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
 
 
     var logs_users= await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono,sheetId);
-    //var logs_alias = await hp_users.insertAlias(oauth2,correos,alias);
+    var logs_alias = await hp_users.insertAlias(oauth2,correos,alias);
     
 
     for(const i in logs_users){logs.push(logs_users[i])}
-    //for(const i in logs_alias){logs.push(logs_alias[i])}
+    for(const i in logs_alias){logs.push(logs_alias[i])}
         var user = await hp_users.obtainById(idUser,oauth2,domain);
         //await res.download("usuarios.txt");
         await res.render('logs/main',{logs:logs});
@@ -62,7 +62,6 @@ router.get('/profile/create_users/download',(req,res)=>{
 router.get('/profile/create_users/test',async(req,res)=>{   
     const oauth2 = helpers.obtenerAuth(req);
 
-    hp_sheets.write(oauth2,'1g9IrcmW9_Bzcsv8BgBT198tneIzOTHbkbq29cVnVghA','B',[['xUJ']]);
     res.redirect('/profile/create_users');
 
 

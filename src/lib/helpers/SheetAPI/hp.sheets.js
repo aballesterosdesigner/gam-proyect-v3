@@ -19,20 +19,20 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
     });
     return data;
 }
-helpers.write = async(auth,sheetId,range,values)=>{
+helpers.write = async(auth,sheetId,range,values,hoja)=>{
     console.log('escribiendo');
     const service = google.sheets({version:'v4',auth});
     var values_sheet = await service.spreadsheets.values.get({
         spreadsheetId:sheetId,
-        range:`Pass!${range}2:${range}`
+        range:`${hoja}!${range}1:${range}`
     });
     console.log(values_sheet.data.values);
      
-    var lastIndex = `${values_sheet.data.values.length+parseInt(2)}`;
+    var lastIndex = `${values_sheet.data.values.length+parseInt(1)}`;
    
     service.spreadsheets.values.update({
         spreadsheetId:sheetId,
-        range:`Pass!${range}${lastIndex}:${range}`,
+        range:`${hoja}!${range}${lastIndex}:${range}`,
         valueInputOption:'USER_ENTERED',
         resource:{
             values:values

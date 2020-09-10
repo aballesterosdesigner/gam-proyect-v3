@@ -219,18 +219,16 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
                             }]
                         },
                     }).then((res)=>{
-
-/**    hp_sheets.write(oauth2,sheetId,` Pass!A2:A`,[[correos[i][0]]]);
-    hp_sheets.write(oauth2,sheetId,'Pass!B2:B',[[passAl]]);
- */
-console.log(i);
+                        
+                        hp_sheets.write(oauth2,sheetId,'A',[[correos[i][0]]],'Pass');
+                        hp_sheets.write(oauth2,sheetId,'B',[[passAl]],'Pass');
                         return hp_logs.insertLogs(res,`El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`,'success');
                     }).catch(async(err)=>{
-                        //console.log(err);
                         return await hp_logs.insertLogs(err);
                     })
                     await logs.push(log);
                 }else{
+                    await hp_sheets.write(oauth2,sheetId,'A',[[correos[i][0]]],'Logs');
                     logs.push(await hp_logs.insertLogs('',`El usuario ${correos[i][0]} Ya existe`,'warning'));
                 } 
             }else{
