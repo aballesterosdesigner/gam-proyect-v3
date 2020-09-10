@@ -27,7 +27,7 @@ helpers.write = async(auth,sheetId,range,values)=>{
         range:`Pass!${range}2:${range}`
     });
     console.log(values_sheet.data.values);
-
+     
     var lastIndex = `${values_sheet.data.values.length+parseInt(2)}`;
    
     service.spreadsheets.values.update({
@@ -37,7 +37,7 @@ helpers.write = async(auth,sheetId,range,values)=>{
         resource:{
             values:values
         }
-    })
+    });
     
 }
 helpers.checkId = async(auth,sheetId) =>{
