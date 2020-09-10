@@ -22,26 +22,23 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
 helpers.write = async(auth,sheetId,range,values)=>{
     console.log('escribiendo');
     const service = google.sheets({version:'v4',auth});
-    var values_sheet = service.spreadsheets.values.get({
+    var values_sheet = await service.spreadsheets.values.get({
         spreadsheetId:sheetId,
-        range:`${range}2:${range}`
-    }).then((res)=>{
-        return res.data.values;
+        range:`Pass!${range}2:${range}`
     });
+    console.log(values_sheet.data.values);
 
-
-    console.log(values_sheet);
-   /**
-    *  const service = google.sheets({version:'v4',auth});
+    var lastIndex = `${values_sheet.data.values.length+parseInt(2)}`;
+   
     service.spreadsheets.values.update({
         spreadsheetId:sheetId,
-        range:range,
+        range:`Pass!${range}${lastIndex}:${range}`,
         valueInputOption:'USER_ENTERED',
         resource:{
             values:values
         }
     })
-    */
+    
 }
 helpers.checkId = async(auth,sheetId) =>{
     const service = google.sheets({version:'v4',auth});

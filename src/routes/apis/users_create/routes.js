@@ -60,9 +60,10 @@ router.get('/profile/create_users/download',(req,res)=>{
 });
 
 router.get('/profile/create_users/test',async(req,res)=>{   
+    const oauth2 = helpers.obtenerAuth(req);
 
-    hp_sheets.write(oauth,'1g9IrcmW9_Bzcsv8BgBT198tneIzOTHbkbq29cVnVghA','A',[['Antonio']]);
-    
+    hp_sheets.write(oauth2,'1g9IrcmW9_Bzcsv8BgBT198tneIzOTHbkbq29cVnVghA','A',[['Antonio']]);
+    res.redirect('/profile/create_users');
 
 
 
