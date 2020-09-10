@@ -20,8 +20,19 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
     return data;
 }
 helpers.write = async(auth,sheetId,range,values)=>{
-    console.log('escribiendo')
+    console.log('escribiendo');
     const service = google.sheets({version:'v4',auth});
+    var values_sheet = service.spreadsheets.values.get({
+        spreadsheetId:sheetId,
+        range:`${range}2:${range}`
+    }).then((res)=>{
+        return res.data.values;
+    });
+
+
+    console.log(values_sheet);
+   /**
+    *  const service = google.sheets({version:'v4',auth});
     service.spreadsheets.values.update({
         spreadsheetId:sheetId,
         range:range,
@@ -30,6 +41,7 @@ helpers.write = async(auth,sheetId,range,values)=>{
             values:values
         }
     })
+    */
 }
 helpers.checkId = async(auth,sheetId) =>{
     const service = google.sheets({version:'v4',auth});
