@@ -201,13 +201,11 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
                     if(domainUndefined===true){
                     //logs.push(await hp_logs.insertLogs('',`[ERROR]:El dominio ${correos[i][0].split('@')[1]} no es valido en la fila ${parseInt(i)+2}`,'error'));
                     }else{
-                        await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
+                       /** await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
                         await hp_sheets.write(oauth2,sheetId,'B',[['Warning']],'Logs');
                         await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} Ya existe`]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs');
-
-
-                        //logs.push(hp_logs.insertLogs('',`[INFO]:El usuario ${correos[i][0]} no existe`,'warning'));
+                        await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs'); */
+                        logs.push(hp_logs.insertLogs('',`[INFO]:El usuario ${correos[i][0]} no existe`,'warning'));
                     }
                     if(telefonos[i]!=undefined){tlf = telefonos[i][0];}
             
@@ -233,7 +231,8 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
                         /**Escribimos dentro de la hoja Pass */
                         hp_sheets.write(oauth2,sheetId,'A',[[correos[i][0]]],'Pass');
                         hp_sheets.write(oauth2,sheetId,'B',[[passAl]],'Pass');
-
+                        hp_sheets.write(oauth2,sheetId,'C',[[nombres[i][0]]],'Pass');
+                        hp_sheets.write(oauth2,sheetId,'D',[[apellidos[i][0]]],'Pass');
 
                         /* Escribimos dentro de la hoja Logs */
 
@@ -249,7 +248,7 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
 
                         await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
                         await hp_sheets.write(oauth2,sheetId,'B',[['Error']],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} no ha podido ser creado debido a ${err.errors["reason"]}`]],'Logs');
+                        await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} no ha podido ser creado debido a ${err}`]],'Logs');
                         await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs');
 
 
@@ -279,15 +278,18 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
 helpers.sendMail = async () =>{
   
 }
-helpers.insertAlias = async(oauth2,correos,alias)=>{
+helpers.insertAlias = async(oauth2,correos,alias,sheetId)=>{
     var logs = new Array();
+    var d = new Date();
     const service = google.admin({version: 'directory_v1', auth: oauth2 });
     for(const i in correos){
         var checkAlias = await helpers.checkIsUndefined(alias);
         if(checkAlias === true){
             if(alias[i]!=undefined){
                 var aux_alias = new Array();
-                aux_alias = alias[i][0].replace(/ /g, "").split(",");
+                if(alias[i][0]!=undefined){
+                    aux_alias = alias[i][0].replace(/ /g, "").split(",");
+                }
                 console.log(aux_alias);
                 for(const j in aux_alias){
                     console.log(aux_alias[j])
@@ -308,25 +310,19 @@ helpers.insertAlias = async(oauth2,correos,alias)=>{
                             case 'duplicate':
                                 await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
                                 await hp_sheets.write(oauth2,sheetId,'B',[['Warning']],'Logs');
-                                await hp_sheets.write(oauth2,sheetId,'C',[[`El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`]],'Logs');
+                                await hp_sheets.write(oauth2,sheetId,'C',[[`El alias ${aux_alias[j]} no ha sido creado para el usuario ${correos[i][0]} ${err.errors[0]["reason"]}`]],'Logs');
                                 await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios/Alias`]],'Logs');
-
-
-                                return hp_logs.insertLogs('',`[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`,'warning');                
+                               return hp_logs.insertLogs('',`[ERROR]: El alias ${aux_alias[j]} no ha sido creado en el usuario ${correos[i][0]} ${err.errors[0]["reason"]}`,'warning');                
                             break;
                         
                             default:
-
-
                                 await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
                                 await hp_sheets.write(oauth2,sheetId,'B',[['Warning']],'Logs');
-                                await hp_sheets.write(oauth2,sheetId,'C',[[`El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`]],'Logs');
+                                await hp_sheets.write(oauth2,sheetId,'C',[[`El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]} para el usuario ${correos[i][0]}`]],'Logs');
                                 await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios/Alias`]],'Logs');
-                            
                                 return hp_logs.insertLogs(err,`[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`);                
                             break;
                         }
-                       
                     });
 
                     logs.push(log);

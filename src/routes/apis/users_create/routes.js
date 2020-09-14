@@ -40,17 +40,16 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
 
 
     var logs_users= await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono,sheetId);
-    var logs_alias = await hp_users.insertAlias(oauth2,correos,alias);
+    //var logs_alias = await hp_users.insertAlias(oauth2,correos,alias,sheetId);
     
 
-    for(const i in logs_users){logs.push(logs_users[i])}
-    for(const i in logs_alias){logs.push(logs_alias[i])}
-        var user = await hp_users.obtainById(idUser,oauth2,domain);
+    //for(const i in logs_users){logs.push(logs_users[i])}
+    //for(const i in logs_alias){logs.push(logs_alias[i])}
+    //var user = await hp_users.obtainById(idUser,oauth2,domain);
         //await res.download("usuarios.txt");
-        await res.render('logs/main',{logs:logs});
-        
-        await hp_users.insertAlias(oauth2,correos,alias);
-    //await res.redirect('/profile/create_users');
+    //await res.render('logs/main',{logs:logs});    
+    await hp_users.insertAlias(oauth2,correos,alias,sheetId);
+await res.redirect('/profile/create_users');
 });
 
 
