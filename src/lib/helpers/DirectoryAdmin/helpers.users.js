@@ -171,18 +171,13 @@ helpers.userExist=async(user,domain,oauth2)=>{
 
     return user_existe;
 };
-
-
 helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sheetId) =>{
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });    
     var checkCorreos = await helpers.checkIsUndefined(correos);
     var checkNombres = await helpers.checkIsUndefined(nombres);
     var checkApellidos = await helpers.checkIsUndefined(apellidos);
     var checkTelefonos = await helpers.checkIsUndefined(telefonos);
-    var d = new Date();
-    console.log(d);
-    var fecha = `${d.getUTCDay()}/${d.getUTCMonth()}/${d.getFullYear()}`;
-    console.log(fecha);
+    var fecha = await helpers.obtenerFecha();
     var logs = new Array();
 
 
@@ -201,10 +196,6 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
                     if(domainUndefined===true){
                     //logs.push(await hp_logs.insertLogs('',`[ERROR]:El dominio ${correos[i][0].split('@')[1]} no es valido en la fila ${parseInt(i)+2}`,'error'));
                     }else{
-                       /** await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'B',[['Warning']],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} Ya existe`]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs'); */
                         logs.push(hp_logs.insertLogs('',`[INFO]:El usuario ${correos[i][0]} no existe`,'warning'));
                     }
                     if(telefonos[i]!=undefined){tlf = telefonos[i][0];}
@@ -225,46 +216,22 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
                                 type: 'work'
                             }]
                         },
-                    }).then(async(res)=>{
-                        
-                        
-                        /**Escribimos dentro de la hoja Pass */
-                        hp_sheets.write(oauth2,sheetId,'A',[[correos[i][0]]],'Pass');
-                        hp_sheets.write(oauth2,sheetId,'B',[[passAl]],'Pass');
-                        hp_sheets.write(oauth2,sheetId,'C',[[nombres[i][0]]],'Pass');
-                        hp_sheets.write(oauth2,sheetId,'D',[[apellidos[i][0]]],'Pass');
+                    }).then((res)=>{
 
-                        /* Escribimos dentro de la hoja Logs */
-
-                        await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'B',[['Success']],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs');
-
-
-
+/**    hp_sheets.write(oauth2,sheetId,` Pass!A2:A`,[[correos[i][0]]]);
+    hp_sheets.write(oauth2,sheetId,'Pass!B2:B',[[passAl]]);
+ */
+console.log(i);
                         return hp_logs.insertLogs(res,`El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`,'success');
                     }).catch(async(err)=>{
-
-                        await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'B',[['Error']],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} no ha podido ser creado debido a ${err}`]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs');
-
-
+                        //console.log(err);
                         return await hp_logs.insertLogs(err);
                     })
                     await logs.push(log);
                 }else{
-                    await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
-                    await hp_sheets.write(oauth2,sheetId,'B',[['Warning']],'Logs');
-                    await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} Ya existe`]],'Logs');
-                    await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs');
-
                     logs.push(await hp_logs.insertLogs('',`El usuario ${correos[i][0]} Ya existe`,'warning'));
                 } 
             }else{
-
                 logs.push(await hp_logs.insertLogs('',`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`));
             }  
         }
@@ -273,6 +240,9 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
     }
     return logs;
 }
+
+
+
 
 
 helpers.sendMail = async () =>{
@@ -323,6 +293,7 @@ helpers.insertAlias = async(oauth2,correos,alias,sheetId)=>{
                                 return hp_logs.insertLogs(err,`[ERROR]: El alias ${aux_alias[j]} no ha sido creado ${err.errors[0]["reason"]}`);                
                             break;
                         }
+
                     });
 
                     logs.push(log);
