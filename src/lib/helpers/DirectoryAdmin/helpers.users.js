@@ -221,25 +221,26 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
                         },
                     }).then(async(res)=>{             
                         /**Escribimos dentro de la hoja Pass */
-                        hp_sheets.write(oauth2,sheetId,'A',[[correos[i][0]]],'Pass');
+                        /**   hp_sheets.write(oauth2,sheetId,'A',[[correos[i][0]]],'Pass');
                         hp_sheets.write(oauth2,sheetId,'B',[[passAl]],'Pass');
                         hp_sheets.write(oauth2,sheetId,'C',[[nombres[i][0]]],'Pass');
-                        hp_sheets.write(oauth2,sheetId,'D',[[apellidos[i][0]]],'Pass');
+                        hp_sheets.write(oauth2,sheetId,'D',[[apellidos[i][0]]],'Pass'); */
 
                         /* Escribimos dentro de la hoja Logs */
-                        await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'B',[['Success']],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs');
+                        //await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
+                        await hp_sheets.write(oauth2,sheetId,'A',[['Success']],'Logs');
+
+                        //await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`]],'Logs');
+                        //await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs');
 
                         return hp_logs.insertLogs(res,`El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`,'success');
 
                     }).catch(async(err)=>{
-
-                        await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
+                        await hp_sheets.write(oauth2,sheetId,'A',[['Error']],'Logs');
+                        /**await hp_sheets.write(oauth2,sheetId,'A',[[d]],'Logs');
                         await hp_sheets.write(oauth2,sheetId,'B',[['Error']],'Logs');
                         await hp_sheets.write(oauth2,sheetId,'C',[[`El usuario ${correos[i][0]} no ha podido ser creado debido a ${err}`]],'Logs');
-                        await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs');
+                        await hp_sheets.write(oauth2,sheetId,'D',[[`Usuarios`]],'Logs'); */
 
                         return await hp_logs.insertLogs(err);
                     });
