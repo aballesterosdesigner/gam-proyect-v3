@@ -256,8 +256,9 @@ helpers.createUsers = async(oauth2,domain,correos,nombres,apellidos,telefonos,sh
                     await hp_sheets.write(oauth2,sheetId,'A',[['Warning']],'Logs');
                     await hp_sheets.write(oauth2,sheetId,'B',[[`El usuario ${correos[i][0]} Ya existe`]],'Logs');
                     await hp_sheets.write(oauth2,sheetId,'C',[[correos[i][0]]],'Logs');
-                  
 
+
+        
                     logs.push(await hp_logs.insertLogs('',`El usuario ${correos[i][0]} Ya existe`,'warning'));
                 } 
             }else{
