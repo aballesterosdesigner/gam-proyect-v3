@@ -7,6 +7,6 @@ module.exports = {
         password: process.env.DATABASE_PASSWORD || 'AntonioHTC@2020',
         database: process.env.DATABASE_NAME || 'interfaz_db',
         /** Abrir para hacer el deploy**/
-        socketPath: `/cloudsql/gam-sql-demo-278414:us-east1:db-gam-demo`
+        //socketPath: `/cloudsql/gam-sql-demo-278414:us-east1:db-gam-demo`
     }
 };

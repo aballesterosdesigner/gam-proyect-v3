@@ -1,0 +1,21 @@
+[ERROR]: El alias lolo1@demo.hispacolextech.com no ha sido creado forbidden
+[ERROR]: El alias lolo2@demo.hispacolextech.com no ha sido creado forbidden
+[Success] Se ha insertado a pepito@demo.hispacolextech.com El alias lolo3@demo.hispacolextech.com 
+[ERROR]: El alias lolo4@demo.hispacolextech.com no ha sido creado invalid
+[ERROR]: El alias lolo1@demo.hispacolextech.com no ha sido creado en lolo@err.hispacolextech.comforbidden
+[ERROR]: El alias lolo2@demo.hispacolextech.com no ha sido creado en lolo@err.hispacolextech.comforbidden
+[Warning] El alias lolo3@demo.hispacolextech.com no ha sido creado en el usuario pepito@demo.hispacolextech.com duplicate
+[ERROR]: El alias 
+lolo4@demo.hispacolextech.com no ha sido creado en pepito@demo.hispacolextech.cominvalid
+[ERROR]: El alias lolo1@demo.hispacolextech.com no ha sido creado en lolo@err.hispacolextech.comforbidden
+[ERROR]: El alias lolo2@demo.hispacolextech.com no ha sido creado en lolo@err.hispacolextech.comforbidden
+[Warning] El alias lolo3@demo.hispacolextech.com no ha sido creado en el usuario pepito@demo.hispacolextech.com duplicate
+[Success] Se ha insertado a pepito@demo.hispacolextech.com El alias lolo4@demo.hispacolextech.com 
+[ERROR]: El alias lolo1@demo.hispacolextech.com no ha sido creado en lolo@demo.hispacolextech.comnotFound
+[ERROR]: El alias lolo2@demo.hispacolextech.com no ha sido creado en lolo@demo.hispacolextech.comnotFound
+[Warning] El alias lolo3@demo.hispacolextech.com no ha sido creado en el usuario pepito@demo.hispacolextech.com duplicate
+[Warning] El alias lolo4@demo.hispacolextech.com no ha sido creado en el usuario pepito@demo.hispacolextech.com duplicate
+[Success] Se ha insertado a lolo@demo.hispacolextech.com El alias lolo1@demo.hispacolextech.com 
+[Success] Se ha insertado a lolo@demo.hispacolextech.com El alias lolo2@demo.hispacolextech.com 
+[Warning] El alias lolo3@demo.hispacolextech.com no ha sido creado en el usuario pepito@demo.hispacolextech.com duplicate
+[Warning] El alias lolo4@demo.hispacolextech.com no ha sido creado en el usuario pepito@demo.hispacolextech.com duplicate

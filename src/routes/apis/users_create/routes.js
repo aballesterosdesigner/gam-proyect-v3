@@ -14,7 +14,7 @@ const hp_users = require('../../../lib/helpers/DirectoryAdmin/helpers.users');
 const uuid = require('uuid');
 var parametros = require('./config');
 const { write } = require('../../../lib/helpers/SheetAPI/hp.sheets');
-
+const fs = require('fs');
 
 
 router.get('/profile/create_users', (req, res) => {
@@ -24,10 +24,10 @@ router.get('/profile/create_users', (req, res) => {
 
 router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     // Sacamos del formulario el id de la hoja
-    const {sheetId,domain} = req.body;
+    const { sheetId, domain } = req.body;
     const oauth2 = helpers.obtenerAuth(req);
     const service = google.admin({ version: 'directory_v1', auth: oauth2 });
-    const gmail = google.gmail({version:'v1',auth:oauth2});
+    const gmail = google.gmail({ version: 'v1', auth: oauth2 });
     var logs = new Array();
 
     var idUser = req.user.profile.id;
@@ -36,38 +36,55 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     var apellidos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.apellidos)).data.values);
     var alias = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.alias)).data.values);
     var telefono = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.telefono)).data.values);
-    //await hp_users.addUsersSheet(oauth2, nombres, apellidos, correos, alias, telefono, req, res);
 
+    /** Creaccion de usuarios*/
+    var logs = await hp_users.createUsers(oauth2, domain, correos, nombres, apellidos, telefono, sheetId);
+    var user = await hp_users.obtainById(idUser, oauth2, domain);
+    await res.render('logs/main', { logs: logs });
+});
+router.post('/profile/create_users/insert_alias', isLoggedIn, async (req, res) => {
+    const { sheetId, domain } = req.body;
+    const oauth2 = helpers.obtenerAuth(req);
+    const service = google.admin({ version: 'directory_v1', auth: oauth2 });
+    const gmail = google.gmail({ version: 'v1', auth: oauth2 });
 
-    await hp_users.createUsers(oauth2,domain,correos,nombres,apellidos,telefono,sheetId);
-    await hp_users.insertAlias(oauth2,correos,alias,sheetId);
-    
+    var correos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.correo)).data.values);
+    var alias = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.alias)).data.values);
 
-    //for(const i in logs_users){logs.push(logs_users[i])}
-    //for(const i in logs_alias){logs.push(logs_alias[i])}
-    var user = await hp_users.obtainById(idUser,oauth2,domain);
-
-
-    res.redirect('/profile/create_users');
-    //await res.download("usuarios.txt");
-    //await res.render('logs/main',{logs:logs});    
-   // await hp_users.insertAlias(oauth2,correos,alias,sheetId);
+    // Insert alias
+    var logs = await hp_users.insertAlias(oauth2, correos, alias, sheetId);
+    res.render('logs/main', { logs: logs });
 });
 
-
-router.get('/profile/create_users/download',(req,res)=>{
-    var file ="usuarios.txt";
+router.get('/profile/create_users/download', (req, res, err) => {
+    var file = "logsUsersCreate.txt";
+    res.download(file); // Set disposition and send it.
+});
+router.get('/profile/create_users/boris', (req, res) => {
+    var file = "boris.txt";
     res.download(file); // Set disposition and send it.
 });
 
-router.get('/profile/create_users/test',async(req,res)=>{   
-    const oauth2 = helpers.obtenerAuth(req);
-
+router.get('/profile/create_users/resetLogs', (req, res) => {
+    fs.unlinkSync('logsUsersCreate.txt');
+    fs.writeFileSync('logsUsersCreate.txt', '');
     res.redirect('/profile/create_users');
-
-
-
 });
+
+
+router.get('/profile/create_users/read', (req, res) => {
+    const rStream = fs.createReadStream('boris.txt')
+    rStream.on('data', b => {
+        const bStr = b.toString();
+    });
+
+
+})
+
+
+
+
+
 
 
 
