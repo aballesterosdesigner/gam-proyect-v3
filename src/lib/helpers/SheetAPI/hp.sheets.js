@@ -19,24 +19,23 @@ helpers.obtenerValoresSheet = async (auth, google, sheetId, range) => {
     });
     return data;
 }
-helpers.write = async(auth,sheetId,range,values,hoja)=>{
+helpers.write = async(auth,sheetId,range,values)=>{
     const service = google.sheets({version:'v4',auth});
-    var values_sheet = await service.spreadsheets.values.get({
-        spreadsheetId:sheetId,
-        range:`${hoja}!${range}1:${range}`
-    });
-    console.log(values_sheet.data.values);
-     
-    var lastIndex = `${values_sheet.data.values.length+parseInt(1)}`;
-   
     service.spreadsheets.values.update({
         spreadsheetId:sheetId,
-        range:`${hoja}!${range}${lastIndex}:${range}`,
+        range:range,
         valueInputOption:'USER_ENTERED',
         resource:{
-            values:values
+            values
+        },
+      }, (err, result) => {
+        if (err) {
+          // Handle error
+          console.log(err);
+        } else {
+          console.log('%d cells updated.', result.updatedCells);
         }
-    });
+      });
     
 }
 helpers.checkId = async(auth,sheetId) =>{
@@ -46,6 +45,19 @@ helpers.checkId = async(auth,sheetId) =>{
     }).catch((err)=>{
         console.log(err.errors["message"]);
     })
+}
+
+helpers.createSheet = async(auth,name)=>{
+    const service = google.sheets({version:'v4',auth});
+    const resource = {
+        properties: {
+          title:name,
+        },
+      };
+    var id = await service.spreadsheets.create({
+        resource
+    });
+    return id;
 }
 
 

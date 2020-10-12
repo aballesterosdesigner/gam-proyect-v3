@@ -57,35 +57,53 @@ router.post('/profile/create_users/insert_alias', isLoggedIn, async (req, res) =
     res.render('logs/main', { logs: logs });
 });
 
-router.get('/profile/create_users/download', (req, res, err) => {
-    var file = "logsUsersCreate.txt";
-    res.download(file); // Set disposition and send it.
+router.get('/profile/create_users/download', async (req, res, err) => {
+    const oauth2 = helpers.obtenerAuth(req);
+    var d = new Date();
+    const logs = await pool.query('SELECT * FROM logs');
+    const idSheet = await (await hp_sheets.createSheet(oauth2,`Logs ${d}`)).data.spreadsheetId;
+    console.log(idSheet);
+    
+    const service = google.sheets({ version: 'v4', auth: oauth2});
+
+    var fechas = new Array();
+    var types = new Array();
+    var motivos = new Array();
+    var modulos = new Array();
+
+    for(i in logs){
+        var auxFecha = new Array();
+        var auxType = new Array();
+        var auxMotivo = new Array();
+        var auxModulo = new Array();
+
+        auxFecha.push(logs[i].fecha);
+        auxType.push(logs[i].type);
+        auxMotivo.push(logs[i].motivo);
+        auxModulo.push(logs[i].modulo);
+
+
+    
+        fechas.push(auxFecha);
+        types.push(auxType);
+        motivos.push(auxMotivo);
+        modulos.push(auxModulo);
+    }
+
+
+
+    await hp_sheets.write(oauth2,idSheet,'A2:A',fechas);
+    await hp_sheets.write(oauth2,idSheet,'B2:B',types);
+    await hp_sheets.write(oauth2,idSheet,'C2:C',motivos);
+    await hp_sheets.write(oauth2,idSheet,'D2:D',modulos);
+
+
+    res.redirect(`https://docs.google.com/spreadsheets/d/${idSheet}/edit#gid=0`)
+    
+    
+
+    
 });
-router.get('/profile/create_users/boris', (req, res) => {
-    var file = "boris.txt";
-    res.download(file); // Set disposition and send it.
-});
-
-router.get('/profile/create_users/resetLogs', async(req, res) => {
-   res.send('no se ha puesto como disponible esta función se ha deshabilitado por')
-});
-
-
-router.get('/profile/create_users/read', (req, res) => {
-    const rStream = fs.createReadStream('boris.txt')
-    rStream.on('data', b => {
-        const bStr = b.toString();
-    });
-});
-
-
-router.get('/profile/db/insert',async(req,res)=>{
-    const usuario = {};
-    usuario.email = 'ballesterosdesigner@gmail.com';
-    console.log(usuario);
-    await pool.query('INSERT INTO usuarios SET ?',[usuario]);
-})
-
 
 
 
