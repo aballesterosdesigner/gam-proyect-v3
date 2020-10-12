@@ -53,6 +53,7 @@ router.post('/profile/create_users/insert_alias', isLoggedIn, async (req, res) =
 
     // Insert alias
     var logs = await hp_users.insertAlias(oauth2, correos, alias, sheetId);
+    console.log(logs);
     res.render('logs/main', { logs: logs });
 });
 
@@ -65,10 +66,8 @@ router.get('/profile/create_users/boris', (req, res) => {
     res.download(file); // Set disposition and send it.
 });
 
-router.get('/profile/create_users/resetLogs', (req, res) => {
-    fs.unlinkSync('logsUsersCreate.txt');
-    fs.writeFileSync('logsUsersCreate.txt', '');
-    res.redirect('/profile/create_users');
+router.get('/profile/create_users/resetLogs', async(req, res) => {
+   res.send('no se ha puesto como disponible esta función se ha deshabilitado por')
 });
 
 
@@ -77,9 +76,21 @@ router.get('/profile/create_users/read', (req, res) => {
     rStream.on('data', b => {
         const bStr = b.toString();
     });
+});
 
 
+router.get('/profile/db/insert',async(req,res)=>{
+    const usuario = {};
+    usuario.email = 'ballesterosdesigner@gmail.com';
+    console.log(usuario);
+    await pool.query('INSERT INTO usuarios SET ?',[usuario]);
 })
+
+
+
+
+
+
 
 
 

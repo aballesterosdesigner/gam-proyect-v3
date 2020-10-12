@@ -23,7 +23,7 @@ app.use((error, req, res, next) => {
             break
 
         case "Error":
-            res.status(500).send('El fichero no está dentro de la ruta o no existe-')
+            res.status(500).send(error.message)
             break;
         default:
     }

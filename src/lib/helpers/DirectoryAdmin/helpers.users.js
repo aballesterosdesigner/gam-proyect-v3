@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { google } = require('googleapis');
-
+const pool = require('../../../database');
 const { GoogleAuth } = require('google-auth-library');
 const { OAuth2Client } = require('google-auth-library');
 const credentials = require('../../../../credentials.json');
@@ -130,7 +130,8 @@ helpers.createUsers = async (oauth2, domain, correos, nombres, apellidos, telefo
                     var domainUndefined = await helpers.unValidDomain(correos[i][0].split('@')[1], domain);
                     if (domainUndefined === true) {
                         //el dominio no es válido en la fila cuyo valor suple el de i
-                    } else {
+                    }else{
+                        
                         logs.push(hp_logs.insertLogs('', `[INFO]:El usuario ${correos[i][0]} no existe`, 'warning'));
                     }
                     if (telefonos[i] != undefined) {
@@ -151,38 +152,65 @@ helpers.createUsers = async (oauth2, domain, correos, nombres, apellidos, telefo
                             }]
                         },
                     }).then(async (res) => {
-                        await fs.appendFile('boris.txt', `${passAl} ${correos[i][0]}\n`, (err) => { });
-                        return hp_logs.insertLogs(res, `El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`, 'success');
+                       var newUser = {
+                           email:res.data.primaryEmail,
+                           nombre:nombres[i][0],
+                           apellidos:apellidos[i][0],
+                           pass:passAl
+                        };
+
+                       await pool.query('INSERT usuarios SET ?',[newUser]);
+                       return hp_logs.insertLogs(res, `El usuario ${correos[i][0]} ha sido creado con contraseña ${passAl}`, 'success');
 
                     }).catch(async (err) => {
                         
-                        await fs.appendFile('logsUsersCreate.txt', `[Error] El usuario ${correos[i][0]} no ha sido creado debido a ${err}\n`, (err) => { });
+                        var newLog = {
+                            fecha:d,
+                            type:'error',
+                            motivo:`${correos[i][0]}:${err}`,
+                            modulo:'Users'
+                        }
+                        await pool.query('INSERT INTO logs SET ?',[newLog]);
                         return await hp_logs.insertLogs(err);
                     });
 
                     await logs.push(log);
                 } else {
-                    await fs.appendFile('logsUsersCreate.txt', `El usuario ${correos[i][0]} Ya existe\n`, (err) => { });
-
+                    var newLog = {
+                        fecha:d,
+                        type:'Warning',
+                        motivo:`El usuario ${correos[i][0]} Ya existe`,
+                        modulo:'Users'
+                    }
+                    await pool.query('INSERT INTO logs SET ?',[newLog]);
+                    // await fs.appendFile('logsUsersCreate.txt', `El usuario ${correos[i][0]} Ya existe\n`, (err) => { });
                     logs.push(await hp_logs.insertLogs('', `El usuario ${correos[i][0]} Ya existe`, 'warning'));
                 }
             } else {
-
+                var newLog = {
+                    fecha:d,
+                    type:'Warning',
+                    motivo:`Hay algun campo vacio obligatorio para la fila ${parseInt(i) + 2}`,
+                    modulo:'Users'
+                }
+                await pool.query('INSERT INTO logs SET ?',[newLog]);
                 logs.push(await hp_logs.insertLogs('', `Hay algun campo vacio obligatorio para la fila ${parseInt(i) + 2}`));
             }
         }
     } else {
-    
+        var newLog = {
+            fecha:d,
+            type:'Warning',
+            motivo:`Hay algun campo vacio obligatorio para la fila ${parseInt(i) + 2}`,
+            modulo:'Users'
+        }
         console.log(`Hay algun campo vacio obligatorio para la fila ${parseInt(i) + 2}`)
-        //logs.push(await hp_logs.insertLogs('',`Hay algun campo vacio obligatorio para la fila ${parseInt(i)+2}`));
     }
     return logs;
 }
 
 
-helpers.sendMail = async () => {
 
-}
 helpers.insertAlias = async (oauth2, correos, alias, sheetId) => {
     var logs = new Array();
     var d = new Date();
@@ -193,6 +221,7 @@ helpers.insertAlias = async (oauth2, correos, alias, sheetId) => {
             if (alias[i] != undefined) {
                 var aux_alias = new Array();
                 if (alias[i][0] != undefined) {
+
                     aux_alias = alias[i][0].replace(/ /g, "").split(",");
                 }
                 for (const j in aux_alias) {
@@ -200,12 +229,26 @@ helpers.insertAlias = async (oauth2, correos, alias, sheetId) => {
                         userKey: correos[i][0],
                         resource: { alias: aux_alias[j] }
                     }).then(async (result_alias) => {
-
+                        var newLog = {
+                            fecha:d,
+                            type:'Success',
+                            motivo:` Se ha insertado a ${correos[i]} El alias ${aux_alias[j]}`,
+                            modulo:'Alias'
+                        }
+                        await pool.query('INSERT INTO logs SET ?',[newLog]);
+    
                         //El alias se ha insertado correctamente
                         await fs.appendFile('logsAlias.txt', `[Success] Se ha insertado a ${correos[i]} El alias ${aux_alias[j]} \n`, (err) => { });
                         return hp_logs.insertLogs(result_alias, `Se ha insertado el alias ${aux_alias[j]} al usuario ${correos[i][0]}`, 'success');
 
                     }).catch(async (err) => {
+                        var newLog = {
+                            fecha:d,
+                            type:'Error',
+                            motivo:` El alias ${aux_alias[j]} no ha sido creado en el usuario ${correos[i][0]} ${err.errors[0]["reason"]}`,
+                            modulo:'Alias'
+                        }
+                        await pool.query('INSERT INTO logs SET ?',[newLog]);
                         switch (err.errors[0]["reason"]) {
                             case 'duplicate':
                                 fs.appendFile('logsAlias.txt', `[Warning] El alias ${aux_alias[j]} no ha sido creado en el usuario ${correos[i][0]} ${err.errors[0]["reason"]}\n`, (err) => { });
@@ -220,11 +263,18 @@ helpers.insertAlias = async (oauth2, correos, alias, sheetId) => {
 
                     });
 
-                    logs.push(log);
+                   
                 }
             }
         } else {
-            fs.appendFile('logsAlias.txt', `[Warning] La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}\n`, (err) => { });
+            var newLog = {
+                fecha:d,
+                type:'Warning',
+                motivo:`La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}`,
+                modulo:'Alias'
+            }
+            await pool.query('INSERT INTO logs SET ?',[newLog]);
+            // fs.appendFile('logsAlias.txt', `[Warning] La columna de alias no puede estar vacia en la fila ${parseInt(i)+2}\n`, (err) => { });
 
             }
     }

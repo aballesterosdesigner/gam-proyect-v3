@@ -19,3 +19,5 @@ lolo4@demo.hispacolextech.com no ha sido creado en pepito@demo.hispacolextech.co
 [Success] Se ha insertado a lolo@demo.hispacolextech.com El alias lolo2@demo.hispacolextech.com 
 [Warning] El alias lolo3@demo.hispacolextech.com no ha sido creado en el usuario pepito@demo.hispacolextech.com duplicate
 [Warning] El alias lolo4@demo.hispacolextech.com no ha sido creado en el usuario pepito@demo.hispacolextech.com duplicate
+[Success] Se ha insertado a lolo5@demo.hispacolextech.com El alias la5@demo.hispacolextech.com 
+[ERROR]: El alias la5@demo.hispacolextech.com no ha sido creado en lolo6@err.hispacolextech.comforbidden

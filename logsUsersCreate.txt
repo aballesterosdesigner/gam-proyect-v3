@@ -1,2 +1,26 @@
+hgghEl usuario lolo@demo.hispacolextech.com Ya existe
 El usuario lolo@demo.hispacolextech.com Ya existe
-El usuario pepito@demo.hispacolextech.com Ya existe
+El usuario lolo@demo.hispacolextech.com Ya existe
+[Error] El usuario lolo1@demo.hispacolextech.com no ha sido creado debido a Error: ER_NO_SUCH_TABLE: Table 'interfaz_db.users' doesn't exist
+El usuario lolo@demo.hispacolextech.com Ya existe
+El usuario lolo1@demo.hispacolextech.com Ya existe
+[Error] El usuario lolo2@demo.hispacolextech.com no ha sido creado debido a Error: ER_NO_SUCH_TABLE: Table 'interfaz_db.users' doesn't exist
+El usuario lolo@demo.hispacolextech.com Ya existe
+El usuario lolo1@demo.hispacolextech.com Ya existe
+El usuario lolo2@demo.hispacolextech.com Ya existe
+El usuario lolo@demo.hispacolextech.com Ya existe
+El usuario lolo1@demo.hispacolextech.com Ya existe
+El usuario lolo3@demo.hispacolextech.com Ya existe
+El usuario lolo2@demo.hispacolextech.com Ya existe
+El usuario lolo5@demo.hispacolextech.com Ya existe
+[Error] El usuario lolo6@demo.hispacolextech.com no ha sido creado debido a Error: Insufficient licenses for one or more products that are set to automatically assign licenses to new users
+[Error] El usuario lolo5@demo.hispacolextech.com no ha sido creado debido a Error: Insufficient licenses for one or more products that are set to automatically assign licenses to new users
+[Error] El usuario lolo6@demo.hispacolextech.com no ha sido creado debido a Error: Insufficient licenses for one or more products that are set to automatically assign licenses to new users
+[Error] El usuario lolo5@demo.hispacolextech.com no ha sido creado debido a Error: Insufficient licenses for one or more products that are set to automatically assign licenses to new users
+[Error] El usuario lolo6@demo.hispacolextech.com no ha sido creado debido a Error: Insufficient licenses for one or more products that are set to automatically assign licenses to new users
+El usuario lolo5@demo.hispacolextech.com Ya existe
+[Error] El usuario lolo6@err.hispacolextech.com no ha sido creado debido a Error: Domain not found.
+[Error] El usuario lolo6@err.hispacolextech.com no ha sido creado debido a Error: Domain not found.
+[Error] El usuario lolo6@err.hispacolextech.com no ha sido creado debido a Error: Domain not found.
+[Error] El usuario lolo6@err.hispacolextech.com no ha sido creado debido a Error: Domain not found.
+[Error] El usuario lolo6@err.hispacolextech.com no ha sido creado debido a Error: Domain not found.
