@@ -51,10 +51,10 @@ router.post('/profile/create_users/insert_alias', isLoggedIn, async (req, res) =
     var correos = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.correo)).data.values);
     var alias = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.alias)).data.values);
 
-    // Insert alias
+
     var logs = await hp_users.insertAlias(oauth2, correos, alias, sheetId);
-    console.log(logs);
-    res.render('logs/main', { logs: logs });
+
+    // res.render('logs/main', { logs: logs });
 });
 
 router.get('/profile/create_users/download', async (req, res, err) => {

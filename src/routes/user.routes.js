@@ -24,9 +24,10 @@ router.post('/profile/seeUsers',(req,res)=>{
   
 
 
-router.get('/profile/logs',(req,res)=>{
-  res.render('partials/logs');
-})
+
+
+
+module.exports = router;
 
 
 
