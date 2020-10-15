@@ -7,7 +7,7 @@ dotenv.config();
 
 const app = require('./app');
 app.use((error, req, res, next) => {
-    console.log(error.name)
+    console.log(error);
     switch (error.name) {
         case "UnauthorizedError":
             console.log("UnauthorizedError = ", error.message)
@@ -27,7 +27,8 @@ app.use((error, req, res, next) => {
             break;
         default:
     }
-})
+});
+
 
 app.listen(app.get('port'));
 console.log('Server is in port', app.get('port'));

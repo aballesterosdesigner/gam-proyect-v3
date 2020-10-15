@@ -50,6 +50,11 @@ router.get('/profile/logs',isLoggedIn,async(req,res)=>{
     }
 
 
+    await hp_sheets.write(oauth2,idSheet,'A1',[['Fecha']]);
+    await hp_sheets.write(oauth2,idSheet,'B1',[['Type']]);
+    await hp_sheets.write(oauth2,idSheet,'C1',[['Motivo']]);
+    await hp_sheets.write(oauth2,idSheet,'D1',[['Modulo']]);
+
 
     await hp_sheets.write(oauth2,idSheet,'A2:A',fechas);
     await hp_sheets.write(oauth2,idSheet,'B2:B',types);
@@ -92,6 +97,10 @@ router.get('/profile/logs/users',async(req,res)=>{
         pases.push(auxPass);
 
     }
+    await hp_sheets.write(oauth2,sheetId,'A1',[['Email']]);
+    await hp_sheets.write(oauth2,sheetId,'B1',[['Nombre']]);
+    await hp_sheets.write(oauth2,sheetId,'C1',[['Apellidos']]);
+    await hp_sheets.write(oauth2,sheetId,'D1',[['Pass']]);
 
     await hp_sheets.write(oauth2,sheetId,'A2:A',emails);
     await hp_sheets.write(oauth2,sheetId,'B2:B',nombres);

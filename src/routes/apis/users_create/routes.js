@@ -38,9 +38,13 @@ router.post('/profile/create_users', isLoggedIn, async (req, res) => {
     var telefono = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.telefono)).data.values);
 
     /** Creaccion de usuarios*/
-    var logs = await hp_users.createUsers(oauth2, domain, correos, nombres, apellidos, telefono, sheetId);
+    var logs = await hp_users.createUsers(oauth2, domain, correos, nombres, apellidos, telefono, sheetId).then(()=>{
+        console.log('ha finalizado la funcion de crear usuarios')
+    });
     var user = await hp_users.obtainById(idUser, oauth2, domain);
-    await res.render('logs/main', { logs: logs });
+    res.redirect('/profile/create_users');
+
+    // await res.render('logs/main', { logs: logs });
 });
 router.post('/profile/create_users/insert_alias', isLoggedIn, async (req, res) => {
     const { sheetId, domain } = req.body;
@@ -52,9 +56,10 @@ router.post('/profile/create_users/insert_alias', isLoggedIn, async (req, res) =
     var alias = ((await hp_sheets.obtenerValoresSheet(oauth2, google, sheetId, parametros.alias)).data.values);
 
 
-    var logs = await hp_users.insertAlias(oauth2, correos, alias, sheetId);
-
+    //var logs = await hp_users.insertAlias(oauth2, correos, alias, sheetId);
+    res.redirect('/profile/create_users');
     // res.render('logs/main', { logs: logs });
+
 });
 
 router.get('/profile/create_users/download', async (req, res, err) => {
